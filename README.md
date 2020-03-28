@@ -5,4 +5,5 @@ Scrapes the data from [http://www.provinz.bz.it/sicherheit-zivilschutz/zivilschu
 
 ## Links
 JSON: [http://api.corona-bz.simedia.cloud/?format=json](http://api.corona-bz.simedia.cloud/?format=json)
+
 CSV: [http://api.corona-bz.simedia.cloud/?format=csv](http://api.corona-bz.simedia.cloud/?format=csv)
