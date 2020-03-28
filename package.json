@@ -1,0 +1,18 @@
+{
+  "name": "covid-bz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "dayjs": "^1.8.23",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build": "rm -rf pub && mkdir pub && cp index.js pub/index.js && cp package.json pub/package.json && cd pub && NODE_ENV=production npm i",
+    "zip": "cd pub && zip -r ../function.zip *"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
