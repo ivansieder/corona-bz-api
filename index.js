@@ -89,6 +89,7 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 200,
         headers: {
+            "Access-Control-Allow-Origin": "*",
             "Content-Type": "text/csv"
         },
         body: result
@@ -114,6 +115,7 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 200,
         headers: {
+            "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json"
         },
         body: JSON.stringify(result)
@@ -123,6 +125,7 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 500,
       headers: {
+          "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
       },
       body: JSON.stringify({ message: "an error happened, i have no idea why ¯\\_(ツ)_/¯, if you want to, write me at ivan@sieder.xyz and I'll check that" })
