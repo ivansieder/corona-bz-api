@@ -40,6 +40,14 @@ async function getData() {
     const deceased = data.find((dataEntry) => dataEntry[0] === "Verstorbene").slice(1).map((entry) => entry === null ? 0 : entry);
     const newDeceased = deceased.map((entry, index) => [null, undefined].includes(deceased[index - 1]) === false ? entry - deceased[index - 1] : entry);
 
+    // number of tests
+    const numberTests = [1497, 1740, 2150, 2844, 3568, 4433, 5179, 5718, 6094, 6631, 7067, 7744, 8520, 9168, 10137, 10640, 11275, 11958];
+    const newNumberTests = numberTests.map((entry, index) => [null, undefined].includes(numberTests[index - 1]) === false ? entry - numberTests[index - 1] : entry);
+
+    // number of tested people
+    const numberTestedPeople = [1087, 1249, 1524, 1995, 2504, 3094, 3501, 3777, 4008, 4292, 4507, 4889, 5215, 5509, 5994, 6254, 6530, 6812];
+    const newNumberTestedPeople = numberTestedPeople.map((entry, index) => [null, undefined].includes(numberTestedPeople[index - 1]) === false ? entry - numberTestedPeople[index - 1] : entry);
+
     return {
       dates,
 
@@ -53,7 +61,13 @@ async function getData() {
       newCured,
 
       deceased,
-      newDeceased
+      newDeceased,
+
+      numberTests,
+      newNumberTests,
+
+      numberTestedPeople,
+      newNumberTestedPeople
     }
   } catch (error) {
     throw error;
@@ -84,6 +98,10 @@ exports.handler = async (event, context) => {
         result += data.newCured[index] + ",";
         result += data.deceased[index] + ",";
         result += data.newDeceased[index] + "\r\n";
+        result += data.numberTests[index] + ",";
+        result += data.newNumberTests[index] + ",";
+        result += data.numberTestedPeople[index] + ",";
+        result += data.newNumberTestedPeople[index];
       }
 
       return {
@@ -108,6 +126,10 @@ exports.handler = async (event, context) => {
           newCured: data.newCured[index],
           deceased: data.deceased[index],
           newDeceased: data.newDeceased[index],
+          numberTests: data.numberTests[index],
+          newNumberTests: data.newNumberTests[index],
+          numberTestedPeople: data.numberTestedPeople[index],
+          newNumberTestedPeople: data.newNumberTestedPeople[index]
         })
       }
 
