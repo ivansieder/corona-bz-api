@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "dayjs": "^1.8.23",
+    "dayjs": "^1.8.24",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {},
