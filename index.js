@@ -18,7 +18,7 @@ async function getData() {
 
     // get the text as source, parse the data and convert it to JSON.
     // damn, I hate regex. Credits 99.99% to @abaumg
-    const data = JSON.parse((await response.text()).match(/columns:\[\s([\[[\d',\[\] .a-zA-Z\r\n]*]*)]/gmi)[0].replace("columns:", "").replace(/'/gmi, "\""));
+    const data = JSON.parse((await response.text()).match(/columns:\[\s([\[[\d',\[\] .a-zA-ZäöüÄÖÜ\r\n]*]*)]/gmi)[0].replace("columns:", "").replace(/'/gmi, "\""));
 
     // dates are hopefully the same for each data set ¯\_(ツ)_/¯
     // remove the first item, as that's the label
@@ -29,7 +29,7 @@ async function getData() {
     const newPositiveTested = positiveTested.map((entry, index) => [null, undefined].includes(positiveTested[index - 1]) === false ? entry - positiveTested[index - 1] : entry);
 
     // currently positive tested
-    const currentlyPositiveTested = data.find((dataEntry) => dataEntry[0] === "Aktuell positiv getestet").slice(1).map((entry) => entry === null ? 0 : entry);
+    const currentlyPositiveTested = data.find((dataEntry) => dataEntry[0] === "Positiv getestete abzüglich Geheilte und Verstorbene").slice(1).map((entry) => entry === null ? 0 : entry);
     const newCurrentlyPositiveTested = currentlyPositiveTested.map((entry, index) => [null, undefined].includes(currentlyPositiveTested[index - 1]) === false ? entry - currentlyPositiveTested[index - 1] : entry);
 
     // cured
@@ -144,6 +144,8 @@ exports.handler = async (event, context) => {
       };
     }
   } catch (error) {
+    console.error(error);
+
     return {
       statusCode: 500,
       headers: {
