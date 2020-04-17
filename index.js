@@ -6,7 +6,7 @@ const fetch = require("node-fetch");
 dayjs.extend(utc);
 dayjs.extend(customParseFormat)
 
-const dataSourceUrl = "http://www.provinz.bz.it/sicherheit-zivilschutz/zivilschutz/aktuelle-daten-zum-coronavirus.asp"
+const dataSourceUrl = "https://afbs.provinz.bz.it/upload/coronavirus/chartDE.js"
 
 async function getData() {
   try {
