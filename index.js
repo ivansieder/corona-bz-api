@@ -41,11 +41,11 @@ async function getData() {
     const newDeceased = deceased.map((entry, index) => [null, undefined].includes(deceased[index - 1]) === false ? entry - deceased[index - 1] : entry);
 
     // number of tests
-    const numberTests = [1497, 1740, 2150, 2844, 3568, 4433, 5179, 5718, 6094, 6631, 7067, 7744, 8520, 9168, 10137, 10640, 11275, 11958, 12682, 13981, 15050, 15728, 16825, 17766, 18870, 19880, 20871, 22186, 23246, 24157, 24457, 25370, 26416, 27698, 28888];
+    const numberTests = [1497, 1740, 2150, 2844, 3568, 4433, 5179, 5718, 6094, 6631, 7067, 7744, 8520, 9168, 10137, 10640, 11275, 11958, 12682, 13981, 15050, 15728, 16825, 17766, 18870, 19880, 20871, 22186, 23246, 24157, 24457, 25370, 26416, 27698, 28888, 30361];
     const newNumberTests = numberTests.map((entry, index) => [null, undefined].includes(numberTests[index - 1]) === false ? entry - numberTests[index - 1] : entry);
 
     // number of tested people
-    const numberTestedPeople = [1087, 1249, 1524, 1995, 2504, 3094, 3501, 3777, 4008, 4292, 4507, 4889, 5215, 5509, 5994, 6254, 6530, 6812, 7082, 7541, 8040, 8338, 8819, 9302, 9752, 10294, 10712, 11265, 11677, 12044, 12194, 12551, 12962, 13515, 13977];
+    const numberTestedPeople = [1087, 1249, 1524, 1995, 2504, 3094, 3501, 3777, 4008, 4292, 4507, 4889, 5215, 5509, 5994, 6254, 6530, 6812, 7082, 7541, 8040, 8338, 8819, 9302, 9752, 10294, 10712, 11265, 11677, 12044, 12194, 12551, 12962, 13515, 13977, 14783];
     const newNumberTestedPeople = numberTestedPeople.map((entry, index) => [null, undefined].includes(numberTestedPeople[index - 1]) === false ? entry - numberTestedPeople[index - 1] : entry);
 
     return {
