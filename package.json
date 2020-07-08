@@ -9,7 +9,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build": "rm -rf dist && mkdir dist && cp index.js dist/index.js && cp package.json dist/package.json && cd dist && NODE_ENV=production npm i",
+    "build": "rm -rf dist && mkdir dist && cp index.js dist/index.js && cp package.json dist/package.json && cd dist && NODE_ENV=production npm i && cd ..",
     "zip": "cd dist && zip -r ../function.zip *"
   },
   "keywords": [],
