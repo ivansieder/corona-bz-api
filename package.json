@@ -9,8 +9,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build": "rm -rf pub && mkdir pub && cp index.js pub/index.js && cp package.json pub/package.json && cd pub && NODE_ENV=production npm i",
-    "zip": "cd pub && zip -r ../function.zip *"
+    "build": "rm -rf dist && mkdir dist && cp index.js dist/index.js && cp package.json dist/package.json && cd dist && NODE_ENV=production npm i",
+    "zip": "cd dist && zip -r ../function.zip *"
   },
   "keywords": [],
   "author": "",
