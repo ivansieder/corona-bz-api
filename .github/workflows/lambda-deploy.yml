@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies, Build application and Zip dist folder contents
-        run: npm install && npm run build && zip -qq -r ./bundle.zip ./dist/*
+        run: npm install && npm run build && npm run zip
       - name: deploy zip to aws lambda
         uses: appleboy/lambda-action@master
         with:
@@ -27,4 +27,4 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: ${{ secrets.AWS_REGION }}
           function_name: aws-chat-randy
-          zip_file: bundle.zip
+          zip_file: function.zip
