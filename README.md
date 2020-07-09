@@ -1,4 +1,5 @@
 # COVID-19 South Tyrol API
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fivansieder%2Fcorona-bz-api%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/ivansieder/corona-bz-api/goto?ref=master)
 #### disclaimer: inofficial ¯\\_(ツ)_/¯
 
 Visualization: [chart.corona-bz.simedia.cloud](https://chart.corona-bz.simedia.cloud)
