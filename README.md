@@ -1,6 +1,6 @@
 # COVID-19 South Tyrol API
 ![Deployment](https://github.com/ivansieder/corona-bz-api/workflows/lambda-deploy/badge.svg)
-#### disclaimer: inofficial ¯\\_(ツ)_/¯
+#### Disclaimer: inofficial ¯\\_(ツ)_/¯
 
 Visualization: [chart.corona-bz.simedia.cloud](https://chart.corona-bz.simedia.cloud)
 
