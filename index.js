@@ -27,6 +27,13 @@ async function getData() {
     // positive tested
     const positiveTested = data.find((dataEntry) => dataEntry[0] === "Positiv getestet").slice(1).map((entry) => entry === null ? 0 : entry);
     const newPositiveTested = positiveTested.map((entry, index) => [null, undefined].includes(positiveTested[index - 1]) === false ? entry - positiveTested[index - 1] : entry);
+    const sevenDaysAveragePositiveTested = positiveTested.map((entry, index) => {
+      if (index < 7) {
+        return null;
+      }
+
+      return positiveTested.slice(index - 7, index).reduce((previousValue, currentValue) => previousValue + currentValue, 0);
+    });
 
     // currently positive tested
     const currentlyPositiveTested = data.find((dataEntry) => dataEntry[0] === "Positiv getestete abzüglich Geheilte und Verstorbene").slice(1).map((entry) => entry === null ? 0 : entry);
@@ -35,7 +42,7 @@ async function getData() {
     // cured
     const cured = data.find((dataEntry) => dataEntry[0] === "Geheilte").slice(1).map((entry) => entry === null ? 0 : entry);
     const newCured = cured.map((entry, index) => [null, undefined].includes(cured[index - 1]) === false ? entry - cured[index - 1] : entry);
-48.617
+
     // deceased
     const deceased = data.find((dataEntry) => dataEntry[0] === "Verstorbene").slice(1).map((entry) => entry === null ? 0 : entry);
     const newDeceased = deceased.map((entry, index) => [null, undefined].includes(deceased[index - 1]) === false ? entry - deceased[index - 1] : entry);
@@ -53,6 +60,7 @@ async function getData() {
 
       positiveTested,
       newPositiveTested,
+      sevenDaysAveragePositiveTested,
 
       currentlyPositiveTested,
       newCurrentlyPositiveTested,
@@ -107,8 +115,8 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 200,
         headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "text/csv"
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "text/csv"
         },
         body: result
       };
@@ -137,8 +145,8 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 200,
         headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(result)
       };
@@ -149,8 +157,8 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 500,
       headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({ message: "an error happened, i have no idea why ¯\\_(ツ)_/¯, if you want to, write me at ivan@sieder.xyz and I'll check that" })
     };
