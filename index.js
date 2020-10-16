@@ -32,7 +32,7 @@ async function getData() {
         return null;
       }
 
-      return positiveTested.slice(index - 7, index).reduce((previousValue, currentValue) => previousValue + currentValue, 0);
+      return positiveTested.slice(index - 7, index).reduce((previousValue, currentValue) => previousValue + currentValue, 0) / 7;
     });
 
     // currently positive tested
