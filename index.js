@@ -129,6 +129,7 @@ exports.handler = async (event, context) => {
           date: dayjs.utc(date, "DD.MM").format("YYYY-MM-DD"),
           positiveTested: data.positiveTested[index],
           newPositiveTested: data.newPositiveTested[index],
+          sevenDaysAveragePositiveTested: data.sevenDaysAveragePositiveTested[index],
           currentlyPositiveTested: data.currentlyPositiveTested[index],
           newCurrentlyPositiveTested: data.newCurrentlyPositiveTested[index],
           cured: data.cured[index],
