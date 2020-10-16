@@ -12,3 +12,9 @@ The data from the number of tests and number of tested people has been manually 
 JSON: [http://api.corona-bz.simedia.cloud/?format=json](http://api.corona-bz.simedia.cloud/?format=json)
 
 CSV: [http://api.corona-bz.simedia.cloud/?format=csv](http://api.corona-bz.simedia.cloud/?format=csv)
+
+## Changelog
+### 2020-10-16
+- added sevenDaysAveragePositiveTested (7-day-average of positive tested)
+- added sevenDaysAverageNumberTests (7-day-average of number of tests)
+- added sevenDaysAverageNumberTestedPeople (7-day-average of number of tested people)
