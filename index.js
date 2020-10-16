@@ -28,11 +28,11 @@ async function getData() {
     const positiveTested = data.find((dataEntry) => dataEntry[0] === "Positiv getestet").slice(1).map((entry) => entry === null ? 0 : entry);
     const newPositiveTested = positiveTested.map((entry, index) => [null, undefined].includes(positiveTested[index - 1]) === false ? entry - positiveTested[index - 1] : entry);
     const sevenDaysAveragePositiveTested = positiveTested.map((entry, index) => {
-      if (index < 7) {
+      if (index < 6) {
         return null;
       }
 
-      return positiveTested.slice(index - 7, index).reduce((previousValue, currentValue) => previousValue + currentValue, 0) / 7;
+      return positiveTested.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue + currentValue, 0) / 7;
     });
 
     // currently positive tested
