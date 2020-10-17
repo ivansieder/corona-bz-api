@@ -18,3 +18,9 @@ CSV: [http://api.corona-bz.simedia.cloud/?format=csv](http://api.corona-bz.simed
 - added sevenDaysAveragePositiveTested (7-day-average of positive tested)
 - added sevenDaysAverageNumberTests (7-day-average of number of tests)
 - added sevenDaysAverageNumberTestedPeople (7-day-average of number of tested people)
+
+### 2020-10-17
+- added numberHospitalizedPeople (amount of hospitalized people)
+- added newNumberHospitalizedPeople (amount of new hospitalized people since the day before)
+- added numberIntensiveTherapy (amount of people in intensive therapy)
+- added newNumberIntensiveTherapy (amount of new people in intensive therapy since the day before)

@@ -69,6 +69,14 @@ async function getData() {
       return newNumberTestedPeople.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue + currentValue, 0) / 7;
     });
 
+    // number of hospitalized people
+    const numberHospitalizedPeople = [50, 53, 71, 79, 87, 99, 127, 146, 145, 166, 190, 223, 249, 225, 234, 231, 249, 269, 279, 291, 291, 239, 245, 325, 268, 263, 258, 246, 183, 190, 177, 166, 180, 181, 179, 162, 160, 159, 157, 141, 148, 141, 138, 150, 136, 119, 126, 112, 113, 109, 103, 99, 99, 87, 78, 55, 61, 63, 56, 56, 54, 50, 48, 50, 52, 46, 43, 50, 34, 35, 30, 29, 28, 27, 16, 17, 13, 13, 13, 13, 13, 7, 10, 7, 7, 7, 7, 7, 8, 8, 7, 8, 8, 8, 8, 8, 3, 3, 4, 4, 3, 3, 3, 3, 4, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 6, 6, 6, 6, 7, 7, 7, 8, 8, 8, 8, 8, 8, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 15, 17, 15, 15, 15, 15, 16, 20, 20, 20, 20, 26, 26, 26, 28, 28, 28, 28, 28, 28, 21, 21, 21, 30, 35, 35, 35, 42, 54, 54, 60, 66, 63];
+    const newNumberHospitalizedPeople = numberHospitalizedPeople.map((entry, index) => [null, undefined].includes(numberHospitalizedPeople[index - 1]) === false ? entry - numberHospitalizedPeople[index - 1] : entry);
+
+    // number of people in intensive therapy
+    const numberIntensiveTherapy = [4, 11, 11, 18, 18, 24, 30, 32, 33, 38, 40, 43, 45, 51, 56, 62, 62, 57, 60, 60, 61, 53, 52, 64, 65, 64, 58, 56, 45, 41, 39, 32, 34, 32, 28, 23, 19, 20, 19, 17, 16, 14, 14, 16, 15, 14, 13, 11, 10, 11, 10, 11, 11, 11, 9, 9, 8, 7, 7, 7, 7, 5, 5, 5, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4, 4, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 1, 2, 3, 3, 3, 6, 7];
+    const newNumberIntensiveTherapy = numberIntensiveTherapy.map((entry, index) => [null, undefined].includes(numberIntensiveTherapy[index - 1]) === false ? entry - numberIntensiveTherapy[index - 1] : entry);
+
     return {
       dates,
 
@@ -91,7 +99,13 @@ async function getData() {
 
       numberTestedPeople,
       newNumberTestedPeople,
-      sevenDaysAverageNumberTestedPeople
+      sevenDaysAverageNumberTestedPeople,
+
+      numberHospitalizedPeople,
+      newNumberHospitalizedPeople,
+
+      numberIntensiveTherapy,
+      newNumberIntensiveTherapy,
     }
   } catch (error) {
     throw error;
@@ -116,6 +130,7 @@ exports.handler = async (event, context) => {
         result += dayjs.utc(date, "DD.MM").format("YYYY-MM-DD") + ",";
         result += data.positiveTested[index] + ",";
         result += data.newPositiveTested[index] + ",";
+        result += data.sevenDaysAveragePositiveTested[index] + ",";
         result += data.currentlyPositiveTested[index] + ",";
         result += data.newCurrentlyPositiveTested[index] + ",";
         result += data.cured[index] + ",";
@@ -124,8 +139,14 @@ exports.handler = async (event, context) => {
         result += data.newDeceased[index] + ",";
         result += data.numberTests[index] + ",";
         result += data.newNumberTests[index] + ",";
+        result += data.sevenDaysAverageNumberTests[index] + ",";
         result += data.numberTestedPeople[index] + ",";
-        result += data.newNumberTestedPeople[index] + "\r\n"
+        result += data.newNumberTestedPeople[index] + ",";
+        result += data.sevenDaysAverageNumberTestedPeople[index] + ",";
+        result += data.numberHospitalizedPeople[index] + ",";
+        result += data.newNumberHospitalizedPeople[index] + ",";
+        result += data.numberIntensiveTherapy[index] + ",";
+        result += data.newNumberIntensiveTherapy[index] + "\r\n";
       }
 
       return {
@@ -157,7 +178,11 @@ exports.handler = async (event, context) => {
           sevenDaysAverageNumberTests: data.sevenDaysAverageNumberTests[index],
           numberTestedPeople: data.numberTestedPeople[index],
           newNumberTestedPeople: data.newNumberTestedPeople[index],
-          sevenDaysAverageNumberTestedPeople: data.sevenDaysAverageNumberTestedPeople[index]
+          sevenDaysAverageNumberTestedPeople: data.sevenDaysAverageNumberTestedPeople[index],
+          numberHospitalizedPeople: data.numberHospitalizedPeople[index],
+          newNumberHospitalizedPeople: data.newNumberHospitalizedPeople[index],
+          numberIntensiveTherapy: data.numberIntensiveTherapy[index],
+          newNumberIntensiveTherapy: data.newNumberIntensiveTherapy[index],
         })
       }
 
