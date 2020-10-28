@@ -12,7 +12,7 @@ async function mapData() {
       Key: process.env.S3_FILENAME
     }).promise();
 
-    const data = s3Data.Body.toJSON();
+    const data = JSON.parse(Buffer.from(s3Data.Body, "utf-8"));
 
     console.log(data);
   } catch (error) {
