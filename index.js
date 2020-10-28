@@ -1,112 +1,44 @@
 const dayjs = require("dayjs");
-var utc = require('dayjs/plugin/utc');
-var customParseFormat = require('dayjs/plugin/customParseFormat')
-const fetch = require("node-fetch");
+var utc = require("dayjs/plugin/utc");
+var customParseFormat = require("dayjs/plugin/customParseFormat");
+const fs = require("fs/promises");
 
-dayjs.extend(utc);
-dayjs.extend(customParseFormat)
-
-const dataSourceUrl = "https://afbs.provinz.bz.it/upload/coronavirus/chartDE.js"
-
-async function getData() {
+async function mapData() {
   try {
-    const response = await fetch(dataSourceUrl);
+    const data = require("./data.json");
 
-    if (response.ok !== true) {
-      throw new Error("the request fucked up");
-    }
+    return data.map((entry, index) => ({
+      date: entry.date,
 
-    // get the text as source, parse the data and convert it to JSON.
-    // damn, I hate regex. Credits 99.99% to @abaumg
-    const data = JSON.parse((await response.text()).match(/columns:\[\s([\[[\d',\[\] .a-zA-ZäöüÄÖÜ\r\n]*]*)]/gmi)[0].replace("columns:", "").replace(/'/gmi, "\""));
+      positiveTested: entry.positiveTested,
+      newPositiveTested: [null, undefined].includes(data[index - 1]) === false ? entry.positiveTested - data[index - 1].positiveTested : entry.positiveTested,
+      sevenDaysAveragePositiveTested: index < 6 ? null : data.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue.newPositiveTested + currentValue.newPositiveTested, 0) / 7,
 
-    // dates are hopefully the same for each data set ¯\_(ツ)_/¯
-    // remove the first item, as that's the label
-    const dates = data.find((dataEntry) => dataEntry[0] === "x1").slice(1);
+      currentlyPositiveTested: entry.currentlyPositiveTested,
+      newCurrentlyPositiveTested: [null, undefined].includes(data[index - 1]) === false ? entry.currentlyPositiveTested - data[index - 1].currentlyPositiveTested : entry.currentlyPositiveTested,
 
-    // positive tested
-    const positiveTested = data.find((dataEntry) => dataEntry[0] === "Positiv getestet").slice(1).map((entry) => entry === null ? 0 : entry);
-    const newPositiveTested = positiveTested.map((entry, index) => [null, undefined].includes(positiveTested[index - 1]) === false ? entry - positiveTested[index - 1] : entry);
-    const sevenDaysAveragePositiveTested = newPositiveTested.map((_, index) => {
-      if (index < 6) {
-        return null;
-      }
+      cured: entry.cured,
+      newCured: [null, undefined].includes(data[index - 1]) === false ? entry.cured - data[index - 1].cured : entry.cured,
 
-      return newPositiveTested.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue + currentValue, 0) / 7;
-    });
+      deceased: entry.deceased,
+      newDeceased: [null, undefined].includes(data[index - 1]) === false ? entry.deceased - data[index - 1].deceased : entry.deceased,
 
-    // currently positive tested
-    const currentlyPositiveTested = data.find((dataEntry) => dataEntry[0] === "Positiv getestete abzüglich Geheilte und Verstorbene").slice(1).map((entry) => entry === null ? 0 : entry);
-    const newCurrentlyPositiveTested = currentlyPositiveTested.map((entry, index) => [null, undefined].includes(currentlyPositiveTested[index - 1]) === false ? entry - currentlyPositiveTested[index - 1] : entry);
+      numberTests: entry.numberTests,
+      newNumberTests: [null, undefined].includes(data[index - 1]) === false ? entry.numberTests - data[index - 1].numberTests : entry.numberTests,
+      sevenDaysAverageNumberTests: index < 6 ? null : data.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue.newNumberTests + currentValue.newNumberTests, 0) / 7,
 
-    // cured
-    const cured = data.find((dataEntry) => dataEntry[0] === "Geheilte").slice(1).map((entry) => entry === null ? 0 : entry);
-    const newCured = cured.map((entry, index) => [null, undefined].includes(cured[index - 1]) === false ? entry - cured[index - 1] : entry);
+      numberTestedPeople: entry.numberTestedPeople,
+      newNumberTestedPeople: [null, undefined].includes(data[index - 1]) === false ? entry.numberTestedPeople - data[index - 1].numberTestedPeople : entry.numberTestedPeople,
+      sevenDaysAverageNumberTestedPeople: index < 6 ? null : data.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue.newNumberTestedPeople + currentValue.newNumberTestedPeople, 0) / 7,
 
-    // deceased
-    const deceased = data.find((dataEntry) => dataEntry[0] === "Verstorbene").slice(1).map((entry) => entry === null ? 0 : entry);
-    const newDeceased = deceased.map((entry, index) => [null, undefined].includes(deceased[index - 1]) === false ? entry - deceased[index - 1] : entry);
+      // number of hospitalized people
+      numberHospitalizedPeople: entry.numberHospitalizedPeople,
+      newNumberHospitalizedPeople: [null, undefined].includes(data[index - 1]) === false ? entry.numberHospitalizedPeople - data[index - 1].numberHospitalizedPeople : entry.numberHospitalizedPeople,
 
-    // number of tests
-    const numberTests = [1497, 1740, 2150, 2844, 3568, 4433, 5179, 5718, 6094, 6631, 7067, 7744, 8520, 9168, 10137, 10640, 11275, 11958, 12682, 13981, 15050, 15728, 16825, 17766, 18870, 19880, 20871, 22186, 23246, 24157, 24457, 25370, 26416, 27698, 28888, 30361, 31381, 31987, 32722, 33994, 35062, 36608, 37431, 38640, 39130, 40218, 41297, 42903, 43804, 44240, 44673, 45264, 46228, 47091, 47908, 48858, 49571, 50019, 50381, 51181, 52015, 52939, 53703, 54428, 54861, 55526, 56310, 57104, 58188, 59671, 60573, 61075, 61464, 62247, 63289, 64105, 65405, 66247, 67121, 67643, 67965, 68513, 69466, 70578, 71755, 72257, 72652, 73404, 74106, 74859, 75735, 76195, 76345, 76661, 77230, 77954, 78580, 79333, 79863, 80085, 80538, 81017, 81847, 82441, 83040, 83445, 83729, 84172, 84846, 85423, 85938, 86566, 87236, 87392, 87774, 88462, 89077, 89711, 90420, 91166, 91340, 92044, 93003, 93770, 94576, 95499, 96130, 96471, 96840, 97639, 98178, 99351, 100311, 101313, 101707, 102095, 103004, 104108, 105217, 106169, 107198, 107735, 108171, 109465, 110703, 111813, 112928, 114137, 114630, 115114, 116822, 118412, 119431, 120894, 121956, 122522, 123161, 124586, 125723, 127013, 128853, 129908, 130517, 131107, 132538, 133436, 134717, 136144, 137117, 138021, 138640, 139688, 140710, 141647, 143127, 143681, 144481, 145373, 146198, 147298, 148307, 149849, 151122, 151821, 152676, 153953, 155482, 157398, 159679, 161209, 162335, 163340, 164766, 166308, 169006, 170485, 172727, 173727, 174711, 176508, 178242, 179991, 181359, 182465, 183294, 184296, 185938, 187835, 189365, 191245, 192844, 193891, 194574, 196147, 197890, 200042, 201756, 203735, 205014, 206833, 208717, 211011, 213835, 216044, 218797, 221307, 223079, 225141];
-    const newNumberTests = numberTests.map((entry, index) => [null, undefined].includes(numberTests[index - 1]) === false ? entry - numberTests[index - 1] : entry);
-    const sevenDaysAverageNumberTests = newNumberTests.map((_, index) => {
-      if (index < 6) {
-        return null;
-      }
-
-      return newNumberTests.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue + currentValue, 0) / 7;
-    });
-
-    // number of tested people
-    const numberTestedPeople = [1087, 1249, 1524, 1995, 2504, 3094, 3501, 3777, 4008, 4292, 4507, 4889, 5215, 5509, 5994, 6254, 6530, 6812, 7082, 7541, 8040, 8338, 8819, 9302, 9752, 10294, 10712, 11265, 11677, 12044, 12194, 12551, 12962, 13515, 13977, 14783, 15089, 15405, 15736, 16442, 17024, 17573, 17895, 18423, 18567, 18844, 19178, 19705, 20036, 20166, 20333, 20561, 20872, 21284, 21572, 21969, 22265, 22500, 22731, 23120, 23487, 23969, 24316, 24677, 24930, 25263, 25601, 25999, 26585, 27549, 27938, 28189, 28401, 28809, 29251, 29680, 30308, 30790, 31254, 31610, 31800, 32135, 32665, 33291, 33944, 34307, 34607, 35148, 35553, 35974, 36393, 36607, 36698, 36931, 37210, 37563, 37858, 38276, 38519, 38636, 38949, 39241, 39601, 39893, 40235, 40487, 40655, 40961, 41389, 41686, 42017, 42385, 42772, 42875, 43059, 43534, 43847, 44223, 44844, 45318, 45433, 46009, 46587, 47161, 47745, 48340, 48617, 48867, 49079, 49628, 49882, 50667, 51322, 51844, 52154, 52364, 52913, 53491, 54206, 54775, 55385, 55757, 56024, 56638, 57346, 57987, 58633, 59260, 59515, 59794, 60696, 61905, 62599, 63420, 63890, 64243, 64618, 65438, 66156, 66986, 68151, 68769, 69119, 69465, 70275, 70742, 71480, 72200, 72684, 73091, 73432, 74019, 74513, 74949, 75631, 75898, 76265, 76699, 77178, 77764, 78315, 79095, 79873, 80293, 80736, 81388, 82321, 83325, 84628, 85316, 85880, 86311, 86974, 87710, 88792, 89488, 90172, 90576, 91062, 91761, 92681, 93443, 94145, 94631, 94956, 95487, 96289, 97393, 98176, 99125, 99917, 100427, 100855, 101569, 102467, 103548, 104499, 105500, 106284, 107299, 108212, 109343, 110930, 112056, 113387, 114559, 115563, 116456];
-    const newNumberTestedPeople = numberTestedPeople.map((entry, index) => [null, undefined].includes(numberTestedPeople[index - 1]) === false ? entry - numberTestedPeople[index - 1] : entry);
-    const sevenDaysAverageNumberTestedPeople = newNumberTestedPeople.map((_, index) => {
-      if (index < 6) {
-        return null;
-      }
-
-      return newNumberTestedPeople.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue + currentValue, 0) / 7;
-    });
-
-    // number of hospitalized people
-    const numberHospitalizedPeople = [50, 53, 71, 79, 87, 99, 127, 146, 145, 166, 190, 223, 249, 225, 234, 231, 249, 269, 279, 291, 291, 239, 245, 325, 268, 263, 258, 246, 183, 190, 177, 166, 180, 181, 179, 162, 160, 159, 157, 141, 148, 141, 138, 150, 136, 119, 126, 112, 113, 109, 103, 99, 99, 87, 78, 55, 61, 63, 56, 56, 54, 50, 48, 50, 52, 46, 43, 50, 34, 35, 30, 29, 28, 27, 16, 17, 13, 13, 13, 13, 13, 7, 10, 7, 7, 7, 7, 7, 8, 8, 7, 8, 8, 8, 8, 8, 3, 3, 4, 4, 3, 3, 3, 3, 4, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 6, 6, 6, 6, 7, 7, 7, 8, 8, 8, 8, 8, 8, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 15, 17, 15, 15, 15, 15, 16, 20, 20, 20, 20, 26, 26, 26, 28, 28, 28, 28, 28, 28, 21, 21, 21, 30, 35, 35, 35, 42, 54, 54, 60, 66, 63, 67, 67, 96, 95, 106, 122, 133, 147, 152, 169, 181];
-    const newNumberHospitalizedPeople = numberHospitalizedPeople.map((entry, index) => [null, undefined].includes(numberHospitalizedPeople[index - 1]) === false ? entry - numberHospitalizedPeople[index - 1] : entry);
-
-    // number of people in intensive therapy
-    const numberIntensiveTherapy = [4, 11, 11, 18, 18, 24, 30, 32, 33, 38, 40, 43, 45, 51, 56, 62, 62, 57, 60, 60, 61, 53, 52, 64, 65, 64, 58, 56, 45, 41, 39, 32, 34, 32, 28, 23, 19, 20, 19, 17, 16, 14, 14, 16, 15, 14, 13, 11, 10, 11, 10, 11, 11, 11, 9, 9, 8, 7, 7, 7, 7, 5, 5, 5, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4, 4, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 1, 2, 3, 3, 3, 6, 7, 7, 7, 7, 8, 8, 11, 12, 11, 12, 12, 15];
-    const newNumberIntensiveTherapy = numberIntensiveTherapy.map((entry, index) => [null, undefined].includes(numberIntensiveTherapy[index - 1]) === false ? entry - numberIntensiveTherapy[index - 1] : entry);
-
-    return {
-      dates,
-
-      positiveTested,
-      newPositiveTested,
-      sevenDaysAveragePositiveTested,
-
-      currentlyPositiveTested,
-      newCurrentlyPositiveTested,
-
-      cured,
-      newCured,
-
-      deceased,
-      newDeceased,
-
-      numberTests,
-      newNumberTests,
-      sevenDaysAverageNumberTests,
-
-      numberTestedPeople,
-      newNumberTestedPeople,
-      sevenDaysAverageNumberTestedPeople,
-
-      numberHospitalizedPeople,
-      newNumberHospitalizedPeople,
-
-      numberIntensiveTherapy,
-      newNumberIntensiveTherapy,
-    }
+      // number of people in intensive therapy
+      numberIntensiveTherapy: entry.numberIntensiveTherapy,
+      newNumberIntensiveTherapy: [null, undefined].includes(data[index - 1]) === false ? entry.numberIntensiveTherapy - data[index - 1].numberIntensiveTherapy : entry.numberIntensiveTherapy,
+    }));
   } catch (error) {
     throw error;
   }
@@ -116,7 +48,7 @@ exports.handler = async (event, context) => {
   const format = event && event.queryStringParameters && event.queryStringParameters.format === "csv" ? "csv" : "json";
 
   try {
-    const data = await getData();
+    const data = await mapData();
     const dataKeys = Object.keys(data);
 
     if (format === "csv") {
@@ -126,27 +58,27 @@ exports.handler = async (event, context) => {
       result += dataKeys.join(",") + "\r\n";
 
       // add data rows
-      for (const [index, date] of data.dates.entries()) {
-        result += dayjs.utc(date, "DD.MM").format("YYYY-MM-DD") + ",";
-        result += data.positiveTested[index] + ",";
-        result += data.newPositiveTested[index] + ",";
-        result += data.sevenDaysAveragePositiveTested[index] + ",";
-        result += data.currentlyPositiveTested[index] + ",";
-        result += data.newCurrentlyPositiveTested[index] + ",";
-        result += data.cured[index] + ",";
-        result += data.newCured[index] + ",";
-        result += data.deceased[index] + ",";
-        result += data.newDeceased[index] + ",";
-        result += data.numberTests[index] + ",";
-        result += data.newNumberTests[index] + ",";
-        result += data.sevenDaysAverageNumberTests[index] + ",";
-        result += data.numberTestedPeople[index] + ",";
-        result += data.newNumberTestedPeople[index] + ",";
-        result += data.sevenDaysAverageNumberTestedPeople[index] + ",";
-        result += data.numberHospitalizedPeople[index] + ",";
-        result += data.newNumberHospitalizedPeople[index] + ",";
-        result += data.numberIntensiveTherapy[index] + ",";
-        result += data.newNumberIntensiveTherapy[index] + "\r\n";
+      for (const entry of data) {
+        result += entry.date + ",";
+        result += entry.positiveTested + ",";
+        result += entry.newPositiveTested + ",";
+        result += entry.sevenDaysAveragePositiveTested + ",";
+        result += entry.currentlyPositiveTested + ",";
+        result += entry.newCurrentlyPositiveTested + ",";
+        result += entry.cured + ",";
+        result += entry.newCured + ",";
+        result += entry.deceased + ",";
+        result += entry.newDeceased + ",";
+        result += entry.numberTests + ",";
+        result += entry.newNumberTests + ",";
+        result += entry.sevenDaysAverageNumberTests + ",";
+        result += entry.numberTestedPeople + ",";
+        result += entry.newNumberTestedPeople + ",";
+        result += entry.sevenDaysAverageNumberTestedPeople + ",";
+        result += entry.numberHospitalizedPeople + ",";
+        result += entry.newNumberHospitalizedPeople + ",";
+        result += entry.numberIntensiveTherapy + ",";
+        result += entry.newNumberIntensiveTherapy + "\r\n";
       }
 
       return {
@@ -161,28 +93,28 @@ exports.handler = async (event, context) => {
       let result = [];
 
       // add data rows
-      for (const [index, date] of data.dates.entries()) {
+      for (const entry of data) {
         result.push({
-          date: dayjs.utc(date, "DD.MM").format("YYYY-MM-DD"),
-          positiveTested: data.positiveTested[index],
-          newPositiveTested: data.newPositiveTested[index],
-          sevenDaysAveragePositiveTested: data.sevenDaysAveragePositiveTested[index],
-          currentlyPositiveTested: data.currentlyPositiveTested[index],
-          newCurrentlyPositiveTested: data.newCurrentlyPositiveTested[index],
-          cured: data.cured[index],
-          newCured: data.newCured[index],
-          deceased: data.deceased[index],
-          newDeceased: data.newDeceased[index],
-          numberTests: data.numberTests[index],
-          newNumberTests: data.newNumberTests[index],
-          sevenDaysAverageNumberTests: data.sevenDaysAverageNumberTests[index],
-          numberTestedPeople: data.numberTestedPeople[index],
-          newNumberTestedPeople: data.newNumberTestedPeople[index],
-          sevenDaysAverageNumberTestedPeople: data.sevenDaysAverageNumberTestedPeople[index],
-          numberHospitalizedPeople: data.numberHospitalizedPeople[index],
-          newNumberHospitalizedPeople: data.newNumberHospitalizedPeople[index],
-          numberIntensiveTherapy: data.numberIntensiveTherapy[index],
-          newNumberIntensiveTherapy: data.newNumberIntensiveTherapy[index],
+          date: entry.date,
+          positiveTested: entry.positiveTested,
+          newPositiveTested: entry.newPositiveTested,
+          sevenDaysAveragePositiveTested: entry.sevenDaysAveragePositiveTested,
+          currentlyPositiveTested: entry.currentlyPositiveTested,
+          newCurrentlyPositiveTested: entry.newCurrentlyPositiveTested,
+          cured: entry.cured,
+          newCured: entry.newCured,
+          deceased: entry.deceased,
+          newDeceased: entry.newDeceased,
+          numberTests: entry.numberTests,
+          newNumberTests: entry.newNumberTests,
+          sevenDaysAverageNumberTests: entry.sevenDaysAverageNumberTests,
+          numberTestedPeople: entry.numberTestedPeople,
+          newNumberTestedPeople: entry.newNumberTestedPeople,
+          sevenDaysAverageNumberTestedPeople: entry.sevenDaysAverageNumberTestedPeople,
+          numberHospitalizedPeople: entry.numberHospitalizedPeople,
+          newNumberHospitalizedPeople: entry.newNumberHospitalizedPeople,
+          numberIntensiveTherapy: entry.numberIntensiveTherapy,
+          newNumberIntensiveTherapy: entry.newNumberIntensiveTherapy,
         })
       }
 
