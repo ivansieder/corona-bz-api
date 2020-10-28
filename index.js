@@ -23,11 +23,17 @@ async function setData(updateData) {
 
     await saveDatabaseData();
 
+    const environmentVariables = (await lambda.getFunctionConfiguration({
+      FunctionName: process.env.LAMBDA_FUNCTION_NAME
+    }).promise()).Environment.Variables;
+
+    environmentVariables["UPDATED"] = new Date().toString();
+
     await lambda.updateFunctionConfiguration({
       FunctionName: process.env.LAMBDA_FUNCTION_NAME,
       Environment: {
         Variables: {
-          UPDATED: new Date().toString()
+          environmentVariables
         }
       }
     }).promise();
