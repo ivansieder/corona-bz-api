@@ -5,15 +5,8 @@ const s3 = new AWS.S3({
   credentials: new AWS.Credentials(process.env.ACCESS_KEY_ID, process.env.SECRET_ACCESS_KEY)
 });
 
-async function mapData() {
+async function mapData(data) {
   try {
-    const s3Data = await s3.getObject({
-      Bucket: process.env.S3_BUCKET,
-      Key: process.env.S3_FILENAME
-    }).promise();
-
-    const data = JSON.parse(Buffer.from(s3Data.Body, "utf-8"));
-
     return data.map((entry, index) => ({
       date: entry.date,
 
@@ -51,11 +44,22 @@ async function mapData() {
   }
 }
 
+let databaseData = null;
+
 exports.handler = async (event, context) => {
   const format = event && event.queryStringParameters && event.queryStringParameters.format === "csv" ? "csv" : "json";
 
   try {
-    const data = await mapData();
+    if (databaseData === null) {
+      const s3Data = await s3.getObject({
+        Bucket: process.env.S3_BUCKET,
+        Key: process.env.S3_FILENAME
+      }).promise();
+  
+      databaseData = JSON.parse(Buffer.from(s3Data.Body, "utf-8"));
+    }
+
+    const data = await mapData(databaseData);
     const dataKeys = Object.keys(data);
 
     if (format === "csv") {
