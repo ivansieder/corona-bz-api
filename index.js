@@ -1,4 +1,22 @@
+const AWS = require("aws-sdk");
+const s3 = new AWS.S3({
+  apiVersion: "2006-03-01",
+  region: "eu-south-1",
+  credentials: new AWS.Credentials(process.env.ACCESS_KEY_ID, config.aws.SECRET_ACCESS_KEY)
+});
+
 async function mapData() {
+  try {
+    const s3Data = await s3.getObject({
+      Bucket: process.env.S3_BUCKET,
+      Key: process.env.S3_FILENAME
+    }).promise();
+
+    console.log(s3Data)
+  } catch (error) {
+    console.error(error);
+  }
+
   try {
     const data = require("./data.json");
 
