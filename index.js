@@ -7,7 +7,8 @@ const s3 = new AWS.S3({
 
 const lambda = new AWS.Lambda({
   apiVersion: "2015-03-31",
-  region: "eu-south-1"
+  region: "eu-south-1",
+  credentials: new AWS.Credentials(process.env.ACCESS_KEY_ID, process.env.SECRET_ACCESS_KEY)
 });
 
 async function setData(updateData) {
