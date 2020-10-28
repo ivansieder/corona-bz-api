@@ -12,7 +12,9 @@ async function mapData() {
       Key: process.env.S3_FILENAME
     }).promise();
 
-    console.log(s3Data)
+    const data = s3Data.Body.toJSON();
+
+    console.log(data);
   } catch (error) {
     console.error(error);
   }
