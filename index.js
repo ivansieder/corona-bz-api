@@ -1,8 +1,3 @@
-const dayjs = require("dayjs");
-var utc = require("dayjs/plugin/utc");
-var customParseFormat = require("dayjs/plugin/customParseFormat");
-const fs = require("fs/promises");
-
 async function mapData() {
   try {
     const data = require("./data.json");
