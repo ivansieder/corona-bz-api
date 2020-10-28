@@ -14,14 +14,6 @@ async function mapData() {
 
     const data = JSON.parse(Buffer.from(s3Data.Body, "utf-8"));
 
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-
-  try {
-    const data = require("./data.json");
-
     return data.map((entry, index) => ({
       date: entry.date,
 
