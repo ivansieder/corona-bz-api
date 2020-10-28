@@ -37,8 +37,26 @@ async function setData(updateData) {
         }
       }
     }).promise();
+
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ success: true })
+    };
   } catch (error) {
     console.error(error);
+
+    return {
+      statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: "an error happened, i have no idea why ¯\\_(ツ)_/¯, if you want to, write me at ivan@sieder.xyz and I'll check that" })
+    };
   }
 }
 
@@ -105,7 +123,7 @@ exports.handler = async (event) => {
     event.httpMethod === "POST"
     && event.headers["simedia-auth-token"] === process.env.AUTH_TOKEN
   ) {
-    await setData(JSON.parse(event.body));
+    return await setData(JSON.parse(event.body));
   } else {
     const format = event && event.queryStringParameters && event.queryStringParameters.format === "csv" ? "csv" : "json";
 
