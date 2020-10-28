@@ -94,6 +94,8 @@ const saveDatabaseData = async () => {
 };
 
 exports.handler = async (event) => {
+  console.log(event.httpMethod);
+  console.log(event.headers);
   if (
     event.httpMethod === "POST"
     && event.headers["SiMedia-Auth-Token"] === process.env.AUTH_TOKEN
