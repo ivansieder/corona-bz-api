@@ -1,14 +1,12 @@
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3({
   apiVersion: "2006-03-01",
-  region: "eu-south-1",
-  credentials: new AWS.Credentials(process.env.ACCESS_KEY_ID, process.env.SECRET_ACCESS_KEY)
+  region: "eu-south-1"
 });
 
 const lambda = new AWS.Lambda({
   apiVersion: "2015-03-31",
-  region: "eu-south-1",
-  credentials: new AWS.Credentials(process.env.ACCESS_KEY_ID, process.env.SECRET_ACCESS_KEY)
+  region: "eu-south-1"
 });
 
 async function setData(updateData) {
