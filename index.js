@@ -100,7 +100,7 @@ exports.handler = async (event) => {
     event.httpMethod === "POST"
     && event.headers["simedia-auth-token"] === process.env.AUTH_TOKEN
   ) {
-    await setData(event.body);
+    await setData(JSON.parse(event.body));
   } else {
     const format = event && event.queryStringParameters && event.queryStringParameters.format === "csv" ? "csv" : "json";
 
