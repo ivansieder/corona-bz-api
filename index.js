@@ -27,7 +27,9 @@ async function setData(updateData) {
     await lambda.updateFunctionConfiguration({
       FunctionName: process.env.LAMBDA_FUNCTION_NAME,
       Environment: {
-        UPDATED: new Date()
+        Variables: {
+          UPDATED: new Date()
+        }
       }
     }).promise();
   } catch (error) {
