@@ -6,7 +6,7 @@
   "dependencies": {},
   "devDependencies": {},
   "scripts": {
-    "build": "rm -rf dist && mkdir dist && cp index.js dist/index.js && cp package.json dist/package.json && cd dist && NODE_ENV=production npm i && cd ..",
+    "build": "rm -rf dist && mkdir dist && cp index.js dist/index.js && cp package.json dist/package.json && cp data.json dist/data.json && cd dist && NODE_ENV=production npm i && cd ..",
     "zip": "cd dist && zip -r ../function.zip *"
   },
   "keywords": [],
