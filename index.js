@@ -5,6 +5,36 @@ const s3 = new AWS.S3({
   credentials: new AWS.Credentials(process.env.ACCESS_KEY_ID, process.env.SECRET_ACCESS_KEY)
 });
 
+const lambda = new AWS.Lambda({
+  apiVersion: "2015-03-31",
+  region: "eu-south-1"
+});
+
+async function setData(updateData) {
+  try {
+    databaseData = await getDatabaseData();
+
+    const foundIndex = databaseData.findIndex((data) => data.date === updateData.date);
+
+    if (foundIndex < 0) {
+      databaseData.push(updateData);
+    } else {
+      databaseData[foundIndex] = updateData;
+    }
+
+    await saveDatabaseData();
+
+    await lambda.updateFunctionConfiguration({
+      FunctionName: process.env.LAMBDA_FUNCTION_NAME,
+      Environment: {
+        UPDATED: new Date()
+      }
+    }).promise();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function mapData(data) {
   try {
     return data.map((entry, index) => ({
@@ -46,108 +76,127 @@ async function mapData(data) {
 
 let databaseData = null;
 
-exports.handler = async (event, context) => {
-  const format = event && event.queryStringParameters && event.queryStringParameters.format === "csv" ? "csv" : "json";
+const getDatabaseData = async () => {
+  const s3Data = await s3.getObject({
+    Bucket: process.env.S3_BUCKET,
+    Key: process.env.S3_FILENAME
+  }).promise();
 
-  try {
-    if (databaseData === null) {
-      const s3Data = await s3.getObject({
-        Bucket: process.env.S3_BUCKET,
-        Key: process.env.S3_FILENAME
-      }).promise();
-  
-      databaseData = JSON.parse(Buffer.from(s3Data.Body, "utf-8"));
-    }
+  return JSON.parse(Buffer.from(s3Data.Body, "utf-8"));
+};
 
-    const data = await mapData(databaseData);
-    const dataKeys = Object.keys(data);
+const saveDatabaseData = async () => {
+  await s3.putObject({
+    Bucket: process.env.S3_BUCKET,
+    Key: process.env.S3_FILENAME,
+    Body: Buffer.from(JSON.stringify(databaseData), "utf-8")
+  }).promise();
+};
 
-    if (format === "csv") {
-      let result = "";
+exports.handler = async (event) => {
+  if (
+    event.httpMethod === "POST"
+    && event.headers["SiMedia-Auth-Token"] === process.env.AUTH_TOKEN
+  ) {
+    await setData(event.body);
+  } else {
+    const format = event && event.queryStringParameters && event.queryStringParameters.format === "csv" ? "csv" : "json";
 
-      // add header row
-      result += dataKeys.join(",") + "\r\n";
-
-      // add data rows
-      for (const entry of data) {
-        result += entry.date + ",";
-        result += entry.positiveTested + ",";
-        result += entry.newPositiveTested + ",";
-        result += entry.sevenDaysAveragePositiveTested + ",";
-        result += entry.currentlyPositiveTested + ",";
-        result += entry.newCurrentlyPositiveTested + ",";
-        result += entry.cured + ",";
-        result += entry.newCured + ",";
-        result += entry.deceased + ",";
-        result += entry.newDeceased + ",";
-        result += entry.numberTests + ",";
-        result += entry.newNumberTests + ",";
-        result += entry.sevenDaysAverageNumberTests + ",";
-        result += entry.numberTestedPeople + ",";
-        result += entry.newNumberTestedPeople + ",";
-        result += entry.sevenDaysAverageNumberTestedPeople + ",";
-        result += entry.numberHospitalizedPeople + ",";
-        result += entry.newNumberHospitalizedPeople + ",";
-        result += entry.numberIntensiveTherapy + ",";
-        result += entry.newNumberIntensiveTherapy + "\r\n";
+    try {
+      if (databaseData === null) {
+        databaseData = await getDatabaseData();
       }
 
-      return {
-        statusCode: 200,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "text/csv"
-        },
-        body: result
-      };
-    } else {
-      let result = [];
+      const data = await mapData(databaseData);
+      const dataKeys = Object.keys(data);
 
-      // add data rows
-      for (const entry of data) {
-        result.push({
-          date: entry.date,
-          positiveTested: entry.positiveTested,
-          newPositiveTested: entry.newPositiveTested,
-          sevenDaysAveragePositiveTested: entry.sevenDaysAveragePositiveTested,
-          currentlyPositiveTested: entry.currentlyPositiveTested,
-          newCurrentlyPositiveTested: entry.newCurrentlyPositiveTested,
-          cured: entry.cured,
-          newCured: entry.newCured,
-          deceased: entry.deceased,
-          newDeceased: entry.newDeceased,
-          numberTests: entry.numberTests,
-          newNumberTests: entry.newNumberTests,
-          sevenDaysAverageNumberTests: entry.sevenDaysAverageNumberTests,
-          numberTestedPeople: entry.numberTestedPeople,
-          newNumberTestedPeople: entry.newNumberTestedPeople,
-          sevenDaysAverageNumberTestedPeople: entry.sevenDaysAverageNumberTestedPeople,
-          numberHospitalizedPeople: entry.numberHospitalizedPeople,
-          newNumberHospitalizedPeople: entry.newNumberHospitalizedPeople,
-          numberIntensiveTherapy: entry.numberIntensiveTherapy,
-          newNumberIntensiveTherapy: entry.newNumberIntensiveTherapy,
-        })
+      if (format === "csv") {
+        let result = "";
+
+        // add header row
+        result += dataKeys.join(",") + "\r\n";
+
+        // add data rows
+        for (const entry of data) {
+          result += entry.date + ",";
+          result += entry.positiveTested + ",";
+          result += entry.newPositiveTested + ",";
+          result += entry.sevenDaysAveragePositiveTested + ",";
+          result += entry.currentlyPositiveTested + ",";
+          result += entry.newCurrentlyPositiveTested + ",";
+          result += entry.cured + ",";
+          result += entry.newCured + ",";
+          result += entry.deceased + ",";
+          result += entry.newDeceased + ",";
+          result += entry.numberTests + ",";
+          result += entry.newNumberTests + ",";
+          result += entry.sevenDaysAverageNumberTests + ",";
+          result += entry.numberTestedPeople + ",";
+          result += entry.newNumberTestedPeople + ",";
+          result += entry.sevenDaysAverageNumberTestedPeople + ",";
+          result += entry.numberHospitalizedPeople + ",";
+          result += entry.newNumberHospitalizedPeople + ",";
+          result += entry.numberIntensiveTherapy + ",";
+          result += entry.newNumberIntensiveTherapy + "\r\n";
+        }
+
+        return {
+          statusCode: 200,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "text/csv"
+          },
+          body: result
+        };
+      } else {
+        let result = [];
+
+        // add data rows
+        for (const entry of data) {
+          result.push({
+            date: entry.date,
+            positiveTested: entry.positiveTested,
+            newPositiveTested: entry.newPositiveTested,
+            sevenDaysAveragePositiveTested: entry.sevenDaysAveragePositiveTested,
+            currentlyPositiveTested: entry.currentlyPositiveTested,
+            newCurrentlyPositiveTested: entry.newCurrentlyPositiveTested,
+            cured: entry.cured,
+            newCured: entry.newCured,
+            deceased: entry.deceased,
+            newDeceased: entry.newDeceased,
+            numberTests: entry.numberTests,
+            newNumberTests: entry.newNumberTests,
+            sevenDaysAverageNumberTests: entry.sevenDaysAverageNumberTests,
+            numberTestedPeople: entry.numberTestedPeople,
+            newNumberTestedPeople: entry.newNumberTestedPeople,
+            sevenDaysAverageNumberTestedPeople: entry.sevenDaysAverageNumberTestedPeople,
+            numberHospitalizedPeople: entry.numberHospitalizedPeople,
+            newNumberHospitalizedPeople: entry.newNumberHospitalizedPeople,
+            numberIntensiveTherapy: entry.numberIntensiveTherapy,
+            newNumberIntensiveTherapy: entry.newNumberIntensiveTherapy,
+          })
+        }
+
+        return {
+          statusCode: 200,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(result)
+        };
       }
+    } catch (error) {
+      console.error(error);
 
       return {
-        statusCode: 200,
+        statusCode: 500,
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(result)
+        body: JSON.stringify({ message: "an error happened, i have no idea why ¯\\_(ツ)_/¯, if you want to, write me at ivan@sieder.xyz and I'll check that" })
       };
     }
-  } catch (error) {
-    console.error(error);
-
-    return {
-      statusCode: 500,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ message: "an error happened, i have no idea why ¯\\_(ツ)_/¯, if you want to, write me at ivan@sieder.xyz and I'll check that" })
-    };
   }
 }
