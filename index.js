@@ -33,7 +33,7 @@ async function setData(updateData) {
       FunctionName: process.env.LAMBDA_FUNCTION_NAME,
       Environment: {
         Variables: {
-          environmentVariables
+          ...environmentVariables
         }
       }
     }).promise();
