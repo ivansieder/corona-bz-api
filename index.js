@@ -28,7 +28,7 @@ async function setData(updateData) {
       FunctionName: process.env.LAMBDA_FUNCTION_NAME,
       Environment: {
         Variables: {
-          UPDATED: new Date()
+          UPDATED: new Date().toString()
         }
       }
     }).promise();
