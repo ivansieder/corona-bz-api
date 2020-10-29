@@ -26,7 +26,7 @@ async function setData(updateData) {
       Content: {
         Simple: {
           Body: {
-            Text: JSON.stringify(databaseData);
+            Text: JSON.stringify(databaseData)
           }
         }
       }
