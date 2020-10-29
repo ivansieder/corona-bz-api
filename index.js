@@ -20,8 +20,9 @@ async function setData(updateData) {
     databaseData = await getDatabaseData();
 
     await ses.sendEmail({
+      FromEmailAddress: `corona-bz-backup <${process.env.BACKUP_FROM_EMAIL}>`,
       Destination: {
-        ToAddresses: ["ivan@sieder.xyz"]
+        ToAddresses: [process.env.BACKUP_TO_EMAIL]
       },
       Content: {
         Simple: {
