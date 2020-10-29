@@ -92,7 +92,7 @@ async function setMunicipalityData(updateData) {
     await s3.putObject({
       Bucket: process.env.S3_BUCKET,
       Key: `${process.env.S3_MUNICIPALITIES_FOLDER}/${updateData.date}.json`,
-      Body: Buffer.from(JSON.stringify(databaseData.data), "utf-8")
+      Body: Buffer.from(JSON.stringify(updateData.data), "utf-8")
     }).promise();
 
     return {
