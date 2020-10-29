@@ -10,27 +10,27 @@ const lambda = new AWS.Lambda({
   region: "eu-south-1"
 });
 
-const ses = new AWS.SESV2({
-  apiVersion: "2019-09-27",
-  region: "eu-central-1"
-});
+// const ses = new AWS.SESV2({
+//   apiVersion: "2019-09-27",
+//   region: "eu-central-1"
+// });
 
 async function setData(updateData) {
   try {
     databaseData = await getDatabaseData();
 
-    await ses.sendEmail({
-      Destination: {
-        ToAddresses: ["ivan@sieder.xyz"]
-      },
-      Content: {
-        Simple: {
-          Body: {
-            Text: JSON.stringify(databaseData)
-          }
-        }
-      }
-    }).promise();
+    // await ses.sendEmail({
+    //   Destination: {
+    //     ToAddresses: ["ivan@sieder.xyz"]
+    //   },
+    //   Content: {
+    //     Simple: {
+    //       Body: {
+    //         Text: JSON.stringify(databaseData)
+    //       }
+    //     }
+    //   }
+    // }).promise();
 
     const foundIndex = databaseData.findIndex((data) => data.date === updateData.date);
 
