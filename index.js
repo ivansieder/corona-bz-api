@@ -150,7 +150,11 @@ exports.handler = async (event) => {
     event.httpMethod === "POST"
     && event.headers["simedia-auth-token"] === process.env.AUTH_TOKEN
   ) {
-    return await setData(JSON.parse(event.body));
+    if (event.queryStringParameters?.type === "general") {
+      return await setData(JSON.parse(event.body));
+    } else if (event.queryStringParameters?.type === "municipalities") {
+      
+    }
   } else {
     const format = event && event.queryStringParameters && event.queryStringParameters.format === "csv" ? "csv" : "json";
 
