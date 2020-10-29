@@ -87,6 +87,36 @@ async function setData(updateData) {
   }
 }
 
+async function setMunicipalityData(updateData) {
+  try {
+    await s3.putObject({
+      Bucket: process.env.S3_BUCKET,
+      Key: `${process.env.S3_MUNICIPALITIES_FOLDER}/${updateData.date}.json`,
+      Body: Buffer.from(JSON.stringify(databaseData.data), "utf-8")
+    }).promise();
+
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ success: true })
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: "an error happened, i have no idea why ¯\\_(ツ)_/¯, if you want to, write me at ivan@sieder.xyz and I'll check that" })
+    };
+  }
+}
+
 async function mapData(data) {
   try {
     return data.map((entry, index) => ({
@@ -153,7 +183,7 @@ exports.handler = async (event) => {
     if (event && event.queryStringParameters && event.queryStringParameters.type === "general") {
       return await setData(JSON.parse(event.body));
     } else if (event && event.queryStringParameters && event.queryStringParameters.type === "municipalities") {
-
+      return await setMunicipalityData(JSON.parse(event.body));
     }
   } else {
     const format = event && event.queryStringParameters && event.queryStringParameters.format === "csv" ? "csv" : "json";
