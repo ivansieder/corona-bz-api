@@ -209,9 +209,10 @@ exports.handler = async (event) => {
         for (const entry of data) {
           result += entry.date + ",";
           result += entry.positiveTested + ",";
-          result += entry.quarantinedPeople + ",";
           result += entry.newPositiveTested + ",";
           result += entry.sevenDaysAveragePositiveTested + ",";
+          result += entry.quarantinedPeople + ",";
+          result += entry.newQuarantinedPeople + ",";
           result += entry.currentlyPositiveTested + ",";
           result += entry.newCurrentlyPositiveTested + ",";
           result += entry.cured + ",";
@@ -246,9 +247,10 @@ exports.handler = async (event) => {
           result.push({
             date: entry.date,
             positiveTested: entry.positiveTested,
-            quarantinedPeople: entry.quarantinedPeople,
             newPositiveTested: entry.newPositiveTested,
             sevenDaysAveragePositiveTested: entry.sevenDaysAveragePositiveTested,
+            quarantinedPeople: entry.quarantinedPeople,
+            newQuarantinedPeople: entry.newQuarantinedPeople,
             currentlyPositiveTested: entry.currentlyPositiveTested,
             newCurrentlyPositiveTested: entry.newCurrentlyPositiveTested,
             cured: entry.cured,
