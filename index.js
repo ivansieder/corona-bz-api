@@ -126,6 +126,9 @@ async function mapData(data) {
       newPositiveTested: [null, undefined].includes(data[index - 1]) === false ? entry.positiveTested - data[index - 1].positiveTested : entry.positiveTested,
       sevenDaysAveragePositiveTested: index < 6 ? null : data.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue.newPositiveTested + currentValue.newPositiveTested, 0) / 7,
 
+      quarantinedPeople: entry.quarantinedPeople,
+      newQuarantinedPeople: [null, undefined].includes(data[index - 1]) === false ? entry.quarantinedPeople - data[index - 1].quarantinedPeople : entry.quarantinedPeople,
+
       currentlyPositiveTested: entry.currentlyPositiveTested,
       newCurrentlyPositiveTested: [null, undefined].includes(data[index - 1]) === false ? entry.currentlyPositiveTested - data[index - 1].currentlyPositiveTested : entry.currentlyPositiveTested,
 
