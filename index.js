@@ -203,7 +203,7 @@ exports.handler = async (event) => {
       }
 
       const data = await mapData(databaseData);
-      const dataKeys = Object.keys(data);
+      const dataKeys = Object.keys(data[0]).sort();
 
       if (format === "csv") {
         let result = "";
@@ -212,29 +212,14 @@ exports.handler = async (event) => {
         result += dataKeys.join(",") + "\r\n";
 
         // add data rows
-        for (const entry of data) {
-          result += entry.date + ",";
-          result += entry.positiveTested + ",";
-          result += entry.newPositiveTested + ",";
-          result += entry.sevenDaysAveragePositiveTested + ",";
-          result += entry.quarantinedPeople + ",";
-          result += entry.newQuarantinedPeople + ",";
-          result += entry.currentlyPositiveTested + ",";
-          result += entry.newCurrentlyPositiveTested + ",";
-          result += entry.cured + ",";
-          result += entry.newCured + ",";
-          result += entry.deceased + ",";
-          result += entry.newDeceased + ",";
-          result += entry.numberTests + ",";
-          result += entry.newNumberTests + ",";
-          result += entry.sevenDaysAverageNumberTests + ",";
-          result += entry.numberTestedPeople + ",";
-          result += entry.newNumberTestedPeople + ",";
-          result += entry.sevenDaysAverageNumberTestedPeople + ",";
-          result += entry.numberHospitalizedPeople + ",";
-          result += entry.newNumberHospitalizedPeople + ",";
-          result += entry.numberIntensiveTherapy + ",";
-          result += entry.newNumberIntensiveTherapy + "\r\n";
+        for (let i = 0; i < data.length; i++) {
+          const entry = data[i];
+
+          for (let j = 0; j < dataKeys.length; j++) {
+            const dataKey = dataKeys[j];
+            
+            result += entry[dataKey] + (j >= dataKeys.length - 1 ? "\r\n" : ",");
+          }
         }
 
         return {
