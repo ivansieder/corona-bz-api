@@ -119,42 +119,45 @@ async function setMunicipalityData(updateData) {
 
 async function mapData(data) {
   try {
-    console.log(data);
-    return data.map((entry, index) => ({
-      date: entry.date,
+    return data.map((entry, index) => {
+      console.log(entry, index);
+      
+      return {
+        date: entry.date,
 
-      positiveTested: entry.positiveTested,
-      newPositiveTested: [null, undefined].includes(data[index - 1]) === false ? entry.positiveTested - data[index - 1].positiveTested : entry.positiveTested,
-      sevenDaysAveragePositiveTested: index < 6 ? null : data.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue.newPositiveTested + currentValue.newPositiveTested, 0) / 7,
+        positiveTested: entry.positiveTested,
+        newPositiveTested: [null, undefined].includes(data[index - 1]) === false ? entry.positiveTested - data[index - 1].positiveTested : entry.positiveTested,
+        sevenDaysAveragePositiveTested: index < 6 ? null : data.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue.newPositiveTested + currentValue.newPositiveTested, 0) / 7,
 
-      quarantinedPeople: entry.quarantinedPeople,
-      newQuarantinedPeople: [null, undefined].includes(data[index - 1]) === false ? entry.quarantinedPeople - data[index - 1].quarantinedPeople : entry.quarantinedPeople,
+        quarantinedPeople: entry.quarantinedPeople,
+        newQuarantinedPeople: [null, undefined].includes(data[index - 1]) === false ? entry.quarantinedPeople - data[index - 1].quarantinedPeople : entry.quarantinedPeople,
 
-      currentlyPositiveTested: entry.currentlyPositiveTested,
-      newCurrentlyPositiveTested: [null, undefined].includes(data[index - 1]) === false ? entry.currentlyPositiveTested - data[index - 1].currentlyPositiveTested : entry.currentlyPositiveTested,
+        currentlyPositiveTested: entry.currentlyPositiveTested,
+        newCurrentlyPositiveTested: [null, undefined].includes(data[index - 1]) === false ? entry.currentlyPositiveTested - data[index - 1].currentlyPositiveTested : entry.currentlyPositiveTested,
 
-      cured: entry.cured,
-      newCured: [null, undefined].includes(data[index - 1]) === false ? entry.cured - data[index - 1].cured : entry.cured,
+        cured: entry.cured,
+        newCured: [null, undefined].includes(data[index - 1]) === false ? entry.cured - data[index - 1].cured : entry.cured,
 
-      deceased: entry.deceased,
-      newDeceased: [null, undefined].includes(data[index - 1]) === false ? entry.deceased - data[index - 1].deceased : entry.deceased,
+        deceased: entry.deceased,
+        newDeceased: [null, undefined].includes(data[index - 1]) === false ? entry.deceased - data[index - 1].deceased : entry.deceased,
 
-      numberTests: entry.numberTests,
-      newNumberTests: [null, undefined].includes(data[index - 1]) === false ? entry.numberTests - data[index - 1].numberTests : entry.numberTests,
-      sevenDaysAverageNumberTests: index < 6 ? null : data.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue.newNumberTests + currentValue.newNumberTests, 0) / 7,
+        numberTests: entry.numberTests,
+        newNumberTests: [null, undefined].includes(data[index - 1]) === false ? entry.numberTests - data[index - 1].numberTests : entry.numberTests,
+        sevenDaysAverageNumberTests: index < 6 ? null : data.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue.newNumberTests + currentValue.newNumberTests, 0) / 7,
 
-      numberTestedPeople: entry.numberTestedPeople,
-      newNumberTestedPeople: [null, undefined].includes(data[index - 1]) === false ? entry.numberTestedPeople - data[index - 1].numberTestedPeople : entry.numberTestedPeople,
-      sevenDaysAverageNumberTestedPeople: index < 6 ? null : data.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue.newNumberTestedPeople + currentValue.newNumberTestedPeople, 0) / 7,
+        numberTestedPeople: entry.numberTestedPeople,
+        newNumberTestedPeople: [null, undefined].includes(data[index - 1]) === false ? entry.numberTestedPeople - data[index - 1].numberTestedPeople : entry.numberTestedPeople,
+        sevenDaysAverageNumberTestedPeople: index < 6 ? null : data.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue.newNumberTestedPeople + currentValue.newNumberTestedPeople, 0) / 7,
 
-      // number of hospitalized people
-      numberHospitalizedPeople: entry.numberHospitalizedPeople,
-      newNumberHospitalizedPeople: [null, undefined].includes(data[index - 1]) === false ? entry.numberHospitalizedPeople - data[index - 1].numberHospitalizedPeople : entry.numberHospitalizedPeople,
+        // number of hospitalized people
+        numberHospitalizedPeople: entry.numberHospitalizedPeople,
+        newNumberHospitalizedPeople: [null, undefined].includes(data[index - 1]) === false ? entry.numberHospitalizedPeople - data[index - 1].numberHospitalizedPeople : entry.numberHospitalizedPeople,
 
-      // number of people in intensive therapy
-      numberIntensiveTherapy: entry.numberIntensiveTherapy,
-      newNumberIntensiveTherapy: [null, undefined].includes(data[index - 1]) === false ? entry.numberIntensiveTherapy - data[index - 1].numberIntensiveTherapy : entry.numberIntensiveTherapy,
-    }));
+        // number of people in intensive therapy
+        numberIntensiveTherapy: entry.numberIntensiveTherapy,
+        newNumberIntensiveTherapy: [null, undefined].includes(data[index - 1]) === false ? entry.numberIntensiveTherapy - data[index - 1].numberIntensiveTherapy : entry.numberIntensiveTherapy,
+      }
+    });
   } catch (error) {
     throw error;
   }
