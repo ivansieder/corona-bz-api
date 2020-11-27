@@ -119,6 +119,7 @@ async function setMunicipalityData(updateData) {
 
 async function mapData(data) {
   try {
+    console.log(data);
     return data.map((entry, index) => ({
       date: entry.date,
 
@@ -197,7 +198,6 @@ exports.handler = async (event) => {
       }
 
       const data = await mapData(databaseData);
-      console.log(data);
       const dataKeys = Object.keys(data);
 
       if (format === "csv") {
