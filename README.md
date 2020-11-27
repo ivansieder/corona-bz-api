@@ -11,7 +11,7 @@ The data from the number of tests and number of tested people has been manually 
 ## Links
 JSON: [http://api.corona-bz.simedia.cloud/?format=json](http://api.corona-bz.simedia.cloud/?format=json)
 
-CSV: [http://api.corona-bz.simedia.cloud/?format=csv](http://api.corona-bz.simedia.cloud/?format=csv)
+CSV (keys are sorted alphabetically): [http://api.corona-bz.simedia.cloud/?format=csv](http://api.corona-bz.simedia.cloud/?format=csv)
 
 ## Changelog
 ### 2020-11-03
