@@ -119,6 +119,7 @@ async function setMunicipalityData(updateData) {
 
 async function mapData(data) {
   try {
+    console.log(data.slice(0, 7).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / 7);
     return data.map((entry, index) => ({
       date: entry.date,
 
