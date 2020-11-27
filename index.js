@@ -158,6 +158,8 @@ async function mapData(data) {
       sevenDaysAverageNumberTests: index < 6 ? null : data.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newNumberTests, 0) / 7,
       sevenDaysAverageNumberTestedPeople: index < 6 ? null : data.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newNumberTestedPeople, 0) / 7,
     }));
+
+    return mappedData;
   } catch (error) {
     throw error;
   }
