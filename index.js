@@ -197,6 +197,7 @@ exports.handler = async (event) => {
       }
 
       const data = await mapData(databaseData);
+      console.log(data);
       const dataKeys = Object.keys(data);
 
       if (format === "csv") {
