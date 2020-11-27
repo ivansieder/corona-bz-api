@@ -8,16 +8,13 @@ on:
 jobs:
   deploy_source:
     name: build and deploy lambda
-    strategy:
-      matrix:
-        node-version: [12.x]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node
+      - uses: actions/checkout@2
+      - name: Use Node.js
+        uses: actions/setup-node@1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '12'
       - name: Install dependencies, Build application and Zip dist folder contents
         run: npm install && npm run build && npm run zip
       - name: deploy zip to aws lambda
