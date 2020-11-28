@@ -123,39 +123,39 @@ async function mapData(data) {
       date: entry.date,
 
       positiveTested: entry.positiveTested,
-      newPositiveTested: [null, undefined].includes(data[index - 1]) === false ? entry.positiveTested - data[index - 1].positiveTested : entry.positiveTested,
+      newPositiveTested: [null, undefined].includes(data[index - 1].positiveTested) === false && [null, undefined].includes(data[index - 1]) === false ? entry.positiveTested - data[index - 1].positiveTested : entry.positiveTested,
 
       positiveAntigenTests: entry.positiveAntigenTests,
-      newPositiveAntigenTests: [null, undefined].includes(data[index - 1]) === false ? entry.positiveAntigenTests - data[index - 1].positiveAntigenTests : entry.positiveAntigenTests,
+      newPositiveAntigenTests: [null, undefined].includes(data[index - 1].positiveAntigenTests) === false && [null, undefined].includes(data[index - 1]) === false ? entry.positiveAntigenTests - data[index - 1].positiveAntigenTests : entry.positiveAntigenTests,
 
       quarantinedPeople: entry.quarantinedPeople,
-      newQuarantinedPeople: [null, undefined].includes(data[index - 1]) === false ? entry.quarantinedPeople - data[index - 1].quarantinedPeople : entry.quarantinedPeople,
+      newQuarantinedPeople: [null, undefined].includes(data[index - 1].quarantinedPeople) === false && [null, undefined].includes(data[index - 1]) === false ? entry.quarantinedPeople - data[index - 1].quarantinedPeople : entry.quarantinedPeople,
 
       currentlyPositiveTested: entry.currentlyPositiveTested,
-      newCurrentlyPositiveTested: [null, undefined].includes(data[index - 1]) === false ? entry.currentlyPositiveTested - data[index - 1].currentlyPositiveTested : entry.currentlyPositiveTested,
+      newCurrentlyPositiveTested: [null, undefined].includes(data[index - 1].currentlyPositiveTested) === false && [null, undefined].includes(data[index - 1]) === false ? entry.currentlyPositiveTested - data[index - 1].currentlyPositiveTested : entry.currentlyPositiveTested,
 
       cured: entry.cured,
-      newCured: [null, undefined].includes(data[index - 1]) === false ? entry.cured - data[index - 1].cured : entry.cured,
+      newCured: [null, undefined].includes(data[index - 1].cured) === false && [null, undefined].includes(data[index - 1]) === false ? entry.cured - data[index - 1].cured : entry.cured,
 
       deceased: entry.deceased,
-      newDeceased: [null, undefined].includes(data[index - 1]) === false ? entry.deceased - data[index - 1].deceased : entry.deceased,
+      newDeceased: [null, undefined].includes(data[index - 1].deceased) === false && [null, undefined].includes(data[index - 1]) === false ? entry.deceased - data[index - 1].deceased : entry.deceased,
 
       numberTests: entry.numberTests,
-      newNumberTests: [null, undefined].includes(data[index - 1]) === false ? entry.numberTests - data[index - 1].numberTests : entry.numberTests,
+      newNumberTests: [null, undefined].includes(data[index - 1].numberTests) === false && [null, undefined].includes(data[index - 1]) === false ? entry.numberTests - data[index - 1].numberTests : entry.numberTests,
 
       numberAntigenTests: entry.numberAntigenTests,
-      newNumberAntigenTests: [null, undefined].includes(data[index - 1]) === false ? entry.numberAntigenTests - data[index - 1].numberAntigenTests : entry.numberAntigenTests,
+      newNumberAntigenTests: [null, undefined].includes(data[index - 1].numberAntigenTests) === false && [null, undefined].includes(data[index - 1]) === false ? entry.numberAntigenTests - data[index - 1].numberAntigenTests : entry.numberAntigenTests,
 
       numberTestedPeople: entry.numberTestedPeople,
-      newNumberTestedPeople: [null, undefined].includes(data[index - 1]) === false ? entry.numberTestedPeople - data[index - 1].numberTestedPeople : entry.numberTestedPeople,
+      newNumberTestedPeople: [null, undefined].includes(data[index - 1].numberTestedPeople) === false && [null, undefined].includes(data[index - 1]) === false ? entry.numberTestedPeople - data[index - 1].numberTestedPeople : entry.numberTestedPeople,
 
       // number of hospitalized people
       numberHospitalizedPeople: entry.numberHospitalizedPeople,
-      newNumberHospitalizedPeople: [null, undefined].includes(data[index - 1]) === false ? entry.numberHospitalizedPeople - data[index - 1].numberHospitalizedPeople : entry.numberHospitalizedPeople,
+      newNumberHospitalizedPeople: [null, undefined].includes(data[index - 1].numberHospitalizedPeople) === false && [null, undefined].includes(data[index - 1]) === false ? entry.numberHospitalizedPeople - data[index - 1].numberHospitalizedPeople : entry.numberHospitalizedPeople,
 
       // number of people in intensive therapy
       numberIntensiveTherapy: entry.numberIntensiveTherapy,
-      newNumberIntensiveTherapy: [null, undefined].includes(data[index - 1]) === false ? entry.numberIntensiveTherapy - data[index - 1].numberIntensiveTherapy : entry.numberIntensiveTherapy,
+      newNumberIntensiveTherapy: [null, undefined].includes(data[index - 1].numberIntensiveTherapy) === false && [null, undefined].includes(data[index - 1]) === false ? entry.numberIntensiveTherapy - data[index - 1].numberIntensiveTherapy : entry.numberIntensiveTherapy,
     }));
 
     const quotient = 533439 / 100000;
