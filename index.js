@@ -152,7 +152,7 @@ async function mapData(data) {
       newNumberIntensiveTherapy: [null, undefined].includes(data[index - 1]) === false ? entry.numberIntensiveTherapy - data[index - 1].numberIntensiveTherapy : entry.numberIntensiveTherapy,
     }));
 
-    const quotient = 536667 / 100000;
+    const quotient = 533439 / 100000;
     mappedData = mappedData.map((entry, index) => ({
       ...entry,
       sevenDaysAveragePositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / 7,
