@@ -13,6 +13,9 @@ JSON: [http://api.corona-bz.simedia.cloud/?format=json](http://api.corona-bz.sim
 
 CSV (keys are sorted alphabetically): [http://api.corona-bz.simedia.cloud/?format=csv](http://api.corona-bz.simedia.cloud/?format=csv)
 
+### Information
+For the quotient to calculate the 7-day-incidence, 533439 has been used as the inhabitants count from the ASTAT (https://astat.provinz.bz.it/de/bevoelkerung.asp)
+
 ## Changelog
 ### 2020-11-28
 - added sevenDaysAverageDeceased (7-day-average of deceased people)
