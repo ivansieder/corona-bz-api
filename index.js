@@ -125,7 +125,7 @@ async function mapData(data) {
       positiveTested: entry.positiveTested,
       newPositiveTested: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].positiveTested) === false ? entry.positiveTested - data[index - 1].positiveTested : entry.positiveTested,
 
-      positiveAntigenTests: entry.positiveAntigenTests ?? 0,
+      positiveAntigenTests: entry.positiveAntigenTests ? entry.positiveAntigenTests : 0,
       newPositiveAntigenTests: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].positiveAntigenTests) === false ? entry.positiveAntigenTests - data[index - 1].positiveAntigenTests : entry.positiveAntigenTests,
 
       quarantinedPeople: entry.quarantinedPeople,
@@ -143,7 +143,7 @@ async function mapData(data) {
       numberTests: entry.numberTests,
       newNumberTests: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].numberTests) === false ? entry.numberTests - data[index - 1].numberTests : entry.numberTests,
 
-      numberAntigenTests: entry.numberAntigenTests ?? 0,
+      numberAntigenTests: entry.numberAntigenTests ? entry.numberAntigenTests : 0,
       newNumberAntigenTests: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].numberAntigenTests) === false ? entry.numberAntigenTests - data[index - 1].numberAntigenTests : entry.numberAntigenTests,
 
       numberTestedPeople: entry.numberTestedPeople,
