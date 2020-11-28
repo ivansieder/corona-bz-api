@@ -22,7 +22,11 @@ For the quotient to calculate the 7-day-incidence, 533439 has been used as the i
 - added sevenDaysIncidencePerOneHundredThousandPositiveTested (7-day-incidence per 100.000 inhabitants of positive tested)
 - added sevenDaysIncidencePerOneHundredThousandNumberTests (7-day-incidence per 100.000 inhabitants of number of tests)
 - added sevenDaysIncidencePerOneHundredNumberTestedPeople (7-day-incidence per 100.000 inhabitants of tested people)
-- sevenDaysIncidencePerOneHundredDeceased (7-day-incidence per 100.000 inhabitants of deceased)
+- added sevenDaysIncidencePerOneHundredDeceased (7-day-incidence per 100.000 inhabitants of deceased)
+- added numberAntigenTests
+- added newNumberAntigenTests
+- added positiveAntigenTests
+- added newPositiveAntigenTests
 
 ### 2020-11-03
 - added quarantinedPeople (amount of people in quarantine)
