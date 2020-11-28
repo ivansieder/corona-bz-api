@@ -152,11 +152,20 @@ async function mapData(data) {
       newNumberIntensiveTherapy: [null, undefined].includes(data[index - 1]) === false ? entry.numberIntensiveTherapy - data[index - 1].numberIntensiveTherapy : entry.numberIntensiveTherapy,
     }));
 
+    const quotient = 536667 / 100000;
     mappedData = mappedData.map((entry, index) => ({
       ...entry,
       sevenDaysAveragePositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / 7,
+      sevenDaysIncidencePerOneHundredThousandPositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / quotient,
+
       sevenDaysAverageNumberTests: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newNumberTests, 0) / 7,
+      sevenDaysIncidencePerOneHundredThousandNumberTests: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newNumberTests, 0) / quotient,
+
       sevenDaysAverageNumberTestedPeople: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newNumberTestedPeople, 0) / 7,
+      sevenDaysIncidencePerOneHundredNumberTestedPeople: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newNumberTestedPeople, 0) / quotient,
+
+      sevenDaysAverageDeceased: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newDeceased, 0) / 7,
+      sevenDaysIncidencePerOneHundredDeceased: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newDeceased, 0) / quotient,
     }));
 
     return mappedData;
@@ -240,6 +249,7 @@ exports.handler = async (event) => {
             positiveTested: entry.positiveTested,
             newPositiveTested: entry.newPositiveTested,
             sevenDaysAveragePositiveTested: entry.sevenDaysAveragePositiveTested,
+            sevenDaysIncidencePerOneHundredThousandPositiveTested: entry.sevenDaysIncidencePerOneHundredThousandPositiveTested,
             quarantinedPeople: entry.quarantinedPeople,
             newQuarantinedPeople: entry.newQuarantinedPeople,
             currentlyPositiveTested: entry.currentlyPositiveTested,
@@ -248,12 +258,16 @@ exports.handler = async (event) => {
             newCured: entry.newCured,
             deceased: entry.deceased,
             newDeceased: entry.newDeceased,
+            sevenDaysAverageDeceased: entry.sevenDaysAverageDeceased,
+            sevenDaysIncidencePerOneHundredDeceased: entry.sevenDaysIncidencePerOneHundredDeceased,
             numberTests: entry.numberTests,
             newNumberTests: entry.newNumberTests,
             sevenDaysAverageNumberTests: entry.sevenDaysAverageNumberTests,
+            sevenDaysIncidencePerOneHundredThousandNumberTests: entry.sevenDaysIncidencePerOneHundredThousandNumberTests,
             numberTestedPeople: entry.numberTestedPeople,
             newNumberTestedPeople: entry.newNumberTestedPeople,
             sevenDaysAverageNumberTestedPeople: entry.sevenDaysAverageNumberTestedPeople,
+            sevenDaysIncidencePerOneHundredNumberTestedPeople: entry.sevenDaysIncidencePerOneHundredNumberTestedPeople,
             numberHospitalizedPeople: entry.numberHospitalizedPeople,
             newNumberHospitalizedPeople: entry.newNumberHospitalizedPeople,
             numberIntensiveTherapy: entry.numberIntensiveTherapy,

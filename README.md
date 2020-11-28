@@ -14,6 +14,13 @@ JSON: [http://api.corona-bz.simedia.cloud/?format=json](http://api.corona-bz.sim
 CSV (keys are sorted alphabetically): [http://api.corona-bz.simedia.cloud/?format=csv](http://api.corona-bz.simedia.cloud/?format=csv)
 
 ## Changelog
+### 2020-11-28
+- added sevenDaysAverageDeceased (7-day-average of deceased people)
+- added sevenDaysIncidencePerOneHundredThousandPositiveTested (7-day-incidence per 100.000 inhabitants of positive tested)
+- added sevenDaysIncidencePerOneHundredThousandNumberTests (7-day-incidence per 100.000 inhabitants of number of tests)
+- added sevenDaysIncidencePerOneHundredNumberTestedPeople (7-day-incidence per 100.000 inhabitants of tested people)
+- sevenDaysIncidencePerOneHundredDeceased (7-day-incidence per 100.000 inhabitants of deceased)
+
 ### 2020-11-03
 - added quarantinedPeople (amount of people in quarantine)
 - added newQuarantinedPeople (amount of new quarantined people since the day before)
