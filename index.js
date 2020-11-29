@@ -125,8 +125,7 @@ async function mapData(data) {
       positiveTested: entry.positiveTested,
       newPositiveTested: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].positiveTested) === false ? entry.positiveTested - data[index - 1].positiveTested : entry.positiveTested,
 
-      positiveAntigenTests: entry.positiveAntigenTests ? entry.positiveAntigenTests : 0,
-      newPositiveAntigenTests: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].positiveAntigenTests) === false ? entry.positiveAntigenTests - data[index - 1].positiveAntigenTests : entry.positiveAntigenTests,
+      newPositiveAntigenTests: entry.newPositiveAntigenTests,
 
       quarantinedPeople: entry.quarantinedPeople,
       newQuarantinedPeople: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].quarantinedPeople) === false ? entry.quarantinedPeople - data[index - 1].quarantinedPeople : entry.quarantinedPeople,
@@ -145,6 +144,8 @@ async function mapData(data) {
 
       numberAntigenTests: entry.numberAntigenTests ? entry.numberAntigenTests : 0,
       newNumberAntigenTests: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].numberAntigenTests) === false ? entry.numberAntigenTests - data[index - 1].numberAntigenTests : entry.numberAntigenTests,
+
+      newNumberAntigenTests: entry.newNumberAntigenTests,
 
       numberTestedPeople: entry.numberTestedPeople,
       newNumberTestedPeople: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].numberTestedPeople) === false ? entry.numberTestedPeople - data[index - 1].numberTestedPeople : entry.numberTestedPeople,
@@ -256,7 +257,6 @@ exports.handler = async (event) => {
             newPositiveTested: entry.newPositiveTested,
             sevenDaysAveragePositiveTested: entry.sevenDaysAveragePositiveTested,
             sevenDaysIncidencePerOneHundredThousandPositiveTested: entry.sevenDaysIncidencePerOneHundredThousandPositiveTested,
-            positiveAntigenTests: entry.positiveAntigenTests,
             newPositiveAntigenTests: entry.newPositiveAntigenTests,
             quarantinedPeople: entry.quarantinedPeople,
             newQuarantinedPeople: entry.newQuarantinedPeople,
@@ -272,7 +272,6 @@ exports.handler = async (event) => {
             newNumberTests: entry.newNumberTests,
             sevenDaysAverageNumberTests: entry.sevenDaysAverageNumberTests,
             sevenDaysIncidencePerOneHundredThousandNumberTests: entry.sevenDaysIncidencePerOneHundredThousandNumberTests,
-            numberAntigenTests: entry.numberAntigenTests,
             newNumberAntigenTests: entry.newNumberAntigenTests,
             numberTestedPeople: entry.numberTestedPeople,
             newNumberTestedPeople: entry.newNumberTestedPeople,
