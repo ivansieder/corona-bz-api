@@ -17,6 +17,12 @@ CSV (keys are sorted alphabetically): [http://api.corona-bz.simedia.cloud/?forma
 For the quotient to calculate the 7-day-incidence, 533439 has been used as the inhabitants count from the ASTAT (https://astat.provinz.bz.it/de/bevoelkerung.asp)
 
 ## Changelog
+### 2020-11-30
+- added sevenDaysAverageNumberHospitalizedPeople 
+- added sevenDaysIncidencePerOneHundredNumberHospitalizedPeople
+- added sevenDaysAverageNumberIntensiveTherapy
+- added sevenDaysIncidencePerOneHundredNumberIntensiveTherapy
+
 ### 2020-11-28
 - added sevenDaysAverageDeceased (7-day-average of deceased people)
 - added sevenDaysIncidencePerOneHundredThousandPositiveTested (7-day-incidence per 100.000 inhabitants of positive tested)

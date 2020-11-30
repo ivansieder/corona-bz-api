@@ -173,6 +173,12 @@ async function mapData(data) {
 
       sevenDaysAverageDeceased: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newDeceased, 0) / 7,
       sevenDaysIncidencePerOneHundredDeceased: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newDeceased, 0) / quotient,
+
+      sevenDaysAverageNumberHospitalizedPeople: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newNumberHospitalizedPeople, 0) / 7,
+      sevenDaysIncidencePerOneHundredNumberHospitalizedPeople: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newNumberHospitalizedPeople, 0) / quotient,
+
+      sevenDaysAverageNumberIntensiveTherapy: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newNumberIntensiveTherapy, 0) / 7,
+      sevenDaysIncidencePerOneHundredNumberIntensiveTherapy: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newNumberIntensiveTherapy, 0) / quotient,
     }));
 
     return mappedData;
@@ -279,8 +285,12 @@ exports.handler = async (event) => {
             sevenDaysIncidencePerOneHundredNumberTestedPeople: entry.sevenDaysIncidencePerOneHundredNumberTestedPeople,
             numberHospitalizedPeople: entry.numberHospitalizedPeople,
             newNumberHospitalizedPeople: entry.newNumberHospitalizedPeople,
+            sevenDaysAverageNumberHospitalizedPeople: entry.sevenDaysAverageNumberHospitalizedPeople,
+            sevenDaysIncidencePerOneHundredNumberHospitalizedPeople: entry.sevenDaysIncidencePerOneHundredNumberHospitalizedPeople,
             numberIntensiveTherapy: entry.numberIntensiveTherapy,
             newNumberIntensiveTherapy: entry.newNumberIntensiveTherapy,
+            sevenDaysAverageNumberIntensiveTherapy: entry.sevenDaysAverageNumberIntensiveTherapy,
+            sevenDaysIncidencePerOneHundredNumberIntensiveTherapy: entry.sevenDaysIncidencePerOneHundredNumberIntensiveTherapy,
           })
         }
 
