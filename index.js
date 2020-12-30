@@ -170,7 +170,7 @@ async function mapData(data) {
     mappedData = mappedData.map((entry, index) => ({
       ...entry,
 
-      sevenDaysIncidencePerOneHundredThousandTotalPositiveTested: index < 258 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.totalNewPositiveTested, 0) / quotient,
+      sevenDaysIncidencePerOneHundredThousandTotalPositiveTested: index < 258 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newTotalPositiveTested, 0) / quotient,
 
       sevenDaysIncidencePerOneHundredThousandPositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / quotient,
 
