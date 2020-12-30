@@ -159,9 +159,21 @@ async function mapData(data) {
       newNumberIntensiveTherapy: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].numberIntensiveTherapy) === false ? entry.numberIntensiveTherapy - data[index - 1].numberIntensiveTherapy : entry.numberIntensiveTherapy,
     }));
 
+    mappedData = mappedData.map((entry) => ({
+      ...entry,
+
+      newTotalNumberTests: ([undefined, null].includes(entry.newNumberTests) ? 0 : entry.newNumberTests) + ([undefined, null].includes(entry.newNumberAntigenTests) ? 0 : entry.newNumberAntigenTests),
+      newTotalPositiveTested: ([undefined, null].includes(entry.newPositiveTested) ? 0 : entry.newPositiveTested) + ([undefined, null].includes(entry.newPositiveAntigenTests) ? 0 : entry.newPositiveAntigenTests),
+    }));
+
     const quotient = 533439 / 100000;
     mappedData = mappedData.map((entry, index) => ({
       ...entry,
+
+      sevenDaysIncidencePerOneHundredThousandTotalPositiveTested: index < 258 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.totalNewPositiveTested, 0) / quotient,
+
+      sevenDaysIncidencePerOneHundredThousandPositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / quotient,
+
       sevenDaysAveragePositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / 7,
       sevenDaysIncidencePerOneHundredThousandPositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / quotient,
 
@@ -259,6 +271,11 @@ exports.handler = async (event) => {
         for (const entry of data) {
           result.push({
             date: entry.date,
+
+            newTotalNumberTests: entry.newTotalNumberTests,
+            newTotalPositiveTested: entry.newTotalPositiveTested,
+            sevenDaysIncidencePerOneHundredThousandTotalPositiveTested: entry.sevenDaysIncidencePerOneHundredThousandTotalPositiveTested,
+
             positiveTested: entry.positiveTested,
             newPositiveTested: entry.newPositiveTested,
             sevenDaysAveragePositiveTested: entry.sevenDaysAveragePositiveTested,
