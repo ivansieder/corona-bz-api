@@ -256,6 +256,7 @@ exports.handler = async (event) => {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
+            timestamp: result.results[0].result.data.timestamp,
             vaccinated: bolzanoData[1],
             vaccinationsDelivered: bolzanoData[3]
           })
