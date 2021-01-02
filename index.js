@@ -253,7 +253,7 @@ exports.handler = async (event) => {
           statusCode: 200,
           headers: {
             "Access-Control-Allow-Origin": "*",
-            "Content-Type": "text/csv"
+            "Content-Type": "application/json"
           },
           body: JSON.stringify({
             vaccinated: bolzanoData[1],
