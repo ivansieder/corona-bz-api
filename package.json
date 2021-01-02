@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "aws-sdk": "^2.819.0"
+    "aws-sdk": "^2.819.0",
+    "node-fetch": "^2.6.1"
   },
   "scripts": {
     "build": "rm -rf dist && mkdir dist && cp index.js dist/index.js && cp package.json dist/package.json && cd dist && NODE_ENV=production npm i && cd ..",

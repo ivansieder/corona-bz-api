@@ -229,32 +229,24 @@ exports.handler = async (event) => {
       return await setMunicipalityData(JSON.parse(event.body));
     }
   } else {
+    const type = event && event.queryStringParameters && event.queryStringParameters.type === "vaccinations" ? "vaccinations" : "data";
     const format = event && event.queryStringParameters && event.queryStringParameters.format === "csv" ? "csv" : "json";
 
-    try {
-      if (databaseData === null) {
-        databaseData = await getDatabaseData();
-      }
+    if (type === "vaccinations") {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
 
-      const data = await mapData(databaseData);
-      const dataKeys = Object.keys(data[0]).sort();
+      const raw = JSON.stringify({"version":"1.0.0","queries":[{"Query":{"Commands":[{"SemanticQueryDataShapeCommand":{"Query":{"Version":2,"From":[{"Name":"t2","Entity":"TAB_REGIONI","Type":0},{"Name":"t","Entity":"TAB_MASTER","Type":0}],"Select":[{"Column":{"Expression":{"SourceRef":{"Source":"t2"}},"Property":"AREA"},"Name":"TAB_REGIONI.AREA"},{"Aggregation":{"Expression":{"Column":{"Expression":{"SourceRef":{"Source":"t"}},"Property":"TOT_SOMM"}},"Function":0},"Name":"Sum(TAB_MASTER.TOT_SOMM)"},{"Measure":{"Expression":{"SourceRef":{"Source":"t"}},"Property":"TassoVaccinazione"},"Name":"TAB_MASTER.TassoVaccinazione"},{"Aggregation":{"Expression":{"Column":{"Expression":{"SourceRef":{"Source":"t"}},"Property":"DOSI_CONSEGNATE"}},"Function":4},"Name":"Sum(TAB_MASTER.DOSI_CONSEGNATE)"}],"OrderBy":[{"Direction":1,"Expression":{"Column":{"Expression":{"SourceRef":{"Source":"t2"}},"Property":"AREA"}}}]},"Binding":{"Primary":{"Groupings":[{"Projections":[0,1,2,3]}]},"DataReduction":{"DataVolume":3,"Primary":{"Window":{"Count":500}}},"Version":1}}}]},"QueryId":"","ApplicationContext":{"DatasetId":"5bff6260-1025-49e0-8e9b-169ade7c07f9","Sources":[{"ReportId":"b548a77c-ab0a-4d7c-a457-2e38c2914fc6"}]}}],"cancelQueries":[],"modelId":4280811});
 
-      if (format === "csv") {
-        let result = "";
+      const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
 
-        // add header row
-        result += dataKeys.join(",") + "\r\n";
-
-        // add data rows
-        for (let i = 0; i < data.length; i++) {
-          const entry = data[i];
-
-          for (let j = 0; j < dataKeys.length; j++) {
-            const dataKey = dataKeys[j];
-            
-            result += entry[dataKey] + (j >= dataKeys.length - 1 ? "\r\n" : ",");
-          }
-        }
+      try {
+        const result = await (await fetch("https://wabi-europe-north-b-api.analysis.windows.net/public/reports/querydata?synchronous=true", requestOptions)).json();
 
         return {
           statusCode: 200,
@@ -262,75 +254,123 @@ exports.handler = async (event) => {
             "Access-Control-Allow-Origin": "*",
             "Content-Type": "text/csv"
           },
-          body: result
+          body: JSON.stringify(result)
         };
-      } else {
-        let result = [];
-
-        // add data rows
-        for (const entry of data) {
-          result.push({
-            date: entry.date,
-
-            newTotalNumberTests: entry.newTotalNumberTests,
-            newTotalPositiveTested: entry.newTotalPositiveTested,
-            sevenDaysIncidencePerOneHundredThousandTotalPositiveTested: entry.sevenDaysIncidencePerOneHundredThousandTotalPositiveTested,
-
-            positiveTested: entry.positiveTested,
-            newPositiveTested: entry.newPositiveTested,
-            sevenDaysAveragePositiveTested: entry.sevenDaysAveragePositiveTested,
-            sevenDaysIncidencePerOneHundredThousandPositiveTested: entry.sevenDaysIncidencePerOneHundredThousandPositiveTested,
-            newPositiveAntigenTests: entry.newPositiveAntigenTests,
-            quarantinedPeople: entry.quarantinedPeople,
-            newQuarantinedPeople: entry.newQuarantinedPeople,
-            currentlyPositiveTested: entry.currentlyPositiveTested,
-            newCurrentlyPositiveTested: entry.newCurrentlyPositiveTested,
-            cured: entry.cured,
-            newCured: entry.newCured,
-            deceased: entry.deceased,
-            newDeceased: entry.newDeceased,
-            sevenDaysAverageDeceased: entry.sevenDaysAverageDeceased,
-            sevenDaysIncidencePerOneHundredDeceased: entry.sevenDaysIncidencePerOneHundredDeceased,
-            numberTests: entry.numberTests,
-            newNumberTests: entry.newNumberTests,
-            sevenDaysAverageNumberTests: entry.sevenDaysAverageNumberTests,
-            sevenDaysIncidencePerOneHundredThousandNumberTests: entry.sevenDaysIncidencePerOneHundredThousandNumberTests,
-            newNumberAntigenTests: entry.newNumberAntigenTests,
-            numberTestedPeople: entry.numberTestedPeople,
-            newNumberTestedPeople: entry.newNumberTestedPeople,
-            sevenDaysAverageNumberTestedPeople: entry.sevenDaysAverageNumberTestedPeople,
-            sevenDaysIncidencePerOneHundredNumberTestedPeople: entry.sevenDaysIncidencePerOneHundredNumberTestedPeople,
-            numberHospitalizedPeople: entry.numberHospitalizedPeople,
-            newNumberHospitalizedPeople: entry.newNumberHospitalizedPeople,
-            sevenDaysAverageNumberHospitalizedPeople: entry.sevenDaysAverageNumberHospitalizedPeople,
-            sevenDaysIncidencePerOneHundredNumberHospitalizedPeople: entry.sevenDaysIncidencePerOneHundredNumberHospitalizedPeople,
-            numberIntensiveTherapy: entry.numberIntensiveTherapy,
-            newNumberIntensiveTherapy: entry.newNumberIntensiveTherapy,
-            sevenDaysAverageNumberIntensiveTherapy: entry.sevenDaysAverageNumberIntensiveTherapy,
-            sevenDaysIncidencePerOneHundredNumberIntensiveTherapy: entry.sevenDaysIncidencePerOneHundredNumberIntensiveTherapy,
-          })
-        }
-
+      } catch (error) {
+        console.error(error);
+  
         return {
-          statusCode: 200,
+          statusCode: 500,
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(result)
+          body: JSON.stringify({ message: "an error happened, i have no idea why ¯\\_(ツ)_/¯, if you want to, write me at ivan@sieder.xyz and I'll check that" })
         };
       }
-    } catch (error) {
-      console.error(error);
-
-      return {
-        statusCode: 500,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ message: "an error happened, i have no idea why ¯\\_(ツ)_/¯, if you want to, write me at ivan@sieder.xyz and I'll check that" })
-      };
+    } else {
+      try {
+        if (databaseData === null) {
+          databaseData = await getDatabaseData();
+        }
+  
+        const data = await mapData(databaseData);
+        const dataKeys = Object.keys(data[0]).sort();
+  
+        if (format === "csv") {
+          let result = "";
+  
+          // add header row
+          result += dataKeys.join(",") + "\r\n";
+  
+          // add data rows
+          for (let i = 0; i < data.length; i++) {
+            const entry = data[i];
+  
+            for (let j = 0; j < dataKeys.length; j++) {
+              const dataKey = dataKeys[j];
+              
+              result += entry[dataKey] + (j >= dataKeys.length - 1 ? "\r\n" : ",");
+            }
+          }
+  
+          return {
+            statusCode: 200,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "text/csv"
+            },
+            body: result
+          };
+        } else {
+          let result = [];
+  
+          // add data rows
+          for (const entry of data) {
+            result.push({
+              date: entry.date,
+  
+              newTotalNumberTests: entry.newTotalNumberTests,
+              newTotalPositiveTested: entry.newTotalPositiveTested,
+              sevenDaysIncidencePerOneHundredThousandTotalPositiveTested: entry.sevenDaysIncidencePerOneHundredThousandTotalPositiveTested,
+  
+              positiveTested: entry.positiveTested,
+              newPositiveTested: entry.newPositiveTested,
+              sevenDaysAveragePositiveTested: entry.sevenDaysAveragePositiveTested,
+              sevenDaysIncidencePerOneHundredThousandPositiveTested: entry.sevenDaysIncidencePerOneHundredThousandPositiveTested,
+              newPositiveAntigenTests: entry.newPositiveAntigenTests,
+              quarantinedPeople: entry.quarantinedPeople,
+              newQuarantinedPeople: entry.newQuarantinedPeople,
+              currentlyPositiveTested: entry.currentlyPositiveTested,
+              newCurrentlyPositiveTested: entry.newCurrentlyPositiveTested,
+              cured: entry.cured,
+              newCured: entry.newCured,
+              deceased: entry.deceased,
+              newDeceased: entry.newDeceased,
+              sevenDaysAverageDeceased: entry.sevenDaysAverageDeceased,
+              sevenDaysIncidencePerOneHundredDeceased: entry.sevenDaysIncidencePerOneHundredDeceased,
+              numberTests: entry.numberTests,
+              newNumberTests: entry.newNumberTests,
+              sevenDaysAverageNumberTests: entry.sevenDaysAverageNumberTests,
+              sevenDaysIncidencePerOneHundredThousandNumberTests: entry.sevenDaysIncidencePerOneHundredThousandNumberTests,
+              newNumberAntigenTests: entry.newNumberAntigenTests,
+              numberTestedPeople: entry.numberTestedPeople,
+              newNumberTestedPeople: entry.newNumberTestedPeople,
+              sevenDaysAverageNumberTestedPeople: entry.sevenDaysAverageNumberTestedPeople,
+              sevenDaysIncidencePerOneHundredNumberTestedPeople: entry.sevenDaysIncidencePerOneHundredNumberTestedPeople,
+              numberHospitalizedPeople: entry.numberHospitalizedPeople,
+              newNumberHospitalizedPeople: entry.newNumberHospitalizedPeople,
+              sevenDaysAverageNumberHospitalizedPeople: entry.sevenDaysAverageNumberHospitalizedPeople,
+              sevenDaysIncidencePerOneHundredNumberHospitalizedPeople: entry.sevenDaysIncidencePerOneHundredNumberHospitalizedPeople,
+              numberIntensiveTherapy: entry.numberIntensiveTherapy,
+              newNumberIntensiveTherapy: entry.newNumberIntensiveTherapy,
+              sevenDaysAverageNumberIntensiveTherapy: entry.sevenDaysAverageNumberIntensiveTherapy,
+              sevenDaysIncidencePerOneHundredNumberIntensiveTherapy: entry.sevenDaysIncidencePerOneHundredNumberIntensiveTherapy,
+            })
+          }
+  
+          return {
+            statusCode: 200,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(result)
+          };
+        }
+      } catch (error) {
+        console.error(error);
+  
+        return {
+          statusCode: 500,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ message: "an error happened, i have no idea why ¯\\_(ツ)_/¯, if you want to, write me at ivan@sieder.xyz and I'll check that" })
+        };
+      }
     }
+
   }
 }
