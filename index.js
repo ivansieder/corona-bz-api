@@ -1,4 +1,5 @@
 const AWS = require("aws-sdk");
+const fetch = require("node-fetch");
 
 const s3 = new AWS.S3({
   apiVersion: "2006-03-01",
@@ -246,6 +247,7 @@ exports.handler = async (event) => {
 
       try {
         const result = await (await fetch("https://wabi-europe-north-b-api.analysis.windows.net/public/reports/querydata?synchronous=true", requestOptions)).json();
+        const bolzanoData = result.results[0].result.data.DSR.ds[0].PH.DM0.find((data) => data.C && data.C[0] === "P.A. Bolzano");
 
         return {
           statusCode: 200,
@@ -253,7 +255,10 @@ exports.handler = async (event) => {
             "Access-Control-Allow-Origin": "*",
             "Content-Type": "text/csv"
           },
-          body: JSON.stringify(result)
+          body: JSON.stringify({
+            vaccinated: bolzanoData[1],
+            vaccinationsDelivered: bolzanoData[3]
+          })
         };
       } catch (error) {
         console.error(error);
