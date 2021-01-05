@@ -247,7 +247,7 @@ exports.handler = async (event) => {
 
       try {
         const result = await (await fetch("https://wabi-europe-north-b-api.analysis.windows.net/public/reports/querydata?synchronous=true", requestOptions)).json();
-        const bolzanoData = result.results[0].result.data.dsr.DS[0].PH[0].DM0.find((data) => data.C && data.C[0] === "P.A. Bolzano").C;
+        const bolzanoData = result.results[0].result.data.dsr.DS[0].PH[0].DM1.find((data) => data.C && data.C[0] === "P.A. Bolzano").C;
 
         return {
           statusCode: 200,
