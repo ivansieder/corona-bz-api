@@ -17,9 +17,6 @@ CSV (keys are sorted alphabetically): [http://api.corona-bz.simedia.cloud/?forma
 For the quotient to calculate the 7-day-incidence, 533439 has been used as the inhabitants count from the ASTAT (https://astat.provinz.bz.it/de/bevoelkerung.asp)
 
 ## Changelog
-### 2021-02-28
-- added currentlyPositiveTested and newCurrentlyPositiveTested again after properly updating and verifying the current data
-
 ### 2021-02-27
 - removed currentlyPositiveTested and newCurrentlyPositiveTested, because it's not aligned with the province's data anymore and they started calculating those data twice per day and it's not feasible to maintain this anymore.
 
