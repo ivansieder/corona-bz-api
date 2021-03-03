@@ -131,8 +131,8 @@ async function mapData(data) {
       quarantinedPeople: entry.quarantinedPeople,
       newQuarantinedPeople: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].quarantinedPeople) === false ? entry.quarantinedPeople - data[index - 1].quarantinedPeople : entry.quarantinedPeople,
 
-      currentlyPositiveTested: entry.currentlyPositiveTested,
-      newCurrentlyPositiveTested: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].currentlyPositiveTested) === false ? entry.currentlyPositiveTested - data[index - 1].currentlyPositiveTested : entry.currentlyPositiveTested,
+      // currentlyPositiveTested: entry.currentlyPositiveTested,
+      // newCurrentlyPositiveTested: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].currentlyPositiveTested) === false ? entry.currentlyPositiveTested - data[index - 1].currentlyPositiveTested : entry.currentlyPositiveTested,
 
       cured: entry.cured,
       newCured: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].cured) === false ? entry.cured - data[index - 1].cured : entry.cured,
@@ -326,8 +326,8 @@ exports.handler = async (event) => {
               newPositiveAntigenTests: entry.newPositiveAntigenTests,
               quarantinedPeople: entry.quarantinedPeople,
               newQuarantinedPeople: entry.newQuarantinedPeople,
-              currentlyPositiveTested: entry.currentlyPositiveTested,
-              newCurrentlyPositiveTested: entry.newCurrentlyPositiveTested,
+              // currentlyPositiveTested: entry.currentlyPositiveTested,
+              // newCurrentlyPositiveTested: entry.newCurrentlyPositiveTested,
               cured: entry.cured,
               newCured: entry.newCured,
               deceased: entry.deceased,
