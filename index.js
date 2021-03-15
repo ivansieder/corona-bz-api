@@ -145,7 +145,6 @@ async function mapData(data) {
 
       numberAntigenTests: entry.numberAntigenTests ? entry.numberAntigenTests : 0,
       newNumberAntigenTests: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].numberAntigenTests) === false ? entry.numberAntigenTests - data[index - 1].numberAntigenTests : entry.numberAntigenTests,
-
       newNumberAntigenTests: entry.newNumberAntigenTests ? entry.newNumberAntigenTests : 0,
 
       numberTestedPeople: entry.numberTestedPeople,
@@ -172,8 +171,6 @@ async function mapData(data) {
       ...entry,
 
       sevenDaysIncidencePerOneHundredThousandTotalPositiveTested: index < 258 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newTotalPositiveTested, 0) / quotient,
-
-      sevenDaysIncidencePerOneHundredThousandPositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / quotient,
 
       sevenDaysAveragePositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / 7,
       sevenDaysIncidencePerOneHundredThousandPositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / quotient,
