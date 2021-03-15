@@ -315,7 +315,7 @@ exports.handler = async (event) => {
   
               newTotalNumberTests: entry.newTotalNumberTests,
               newTotalPositiveTested: entry.newTotalPositiveTested,
-              sevenDaysIncidencePerOneHundredThousandTotalTests: entry.sevenDaysIncidencePerOneHundredThousandTotalTests,
+              sevenDaysIncidencePerOneHundredThousandTotalNumberTests: entry.sevenDaysIncidencePerOneHundredThousandTotalNumberTests,
               sevenDaysIncidencePerOneHundredThousandTotalPositiveTested: entry.sevenDaysIncidencePerOneHundredThousandTotalPositiveTested,
   
               positiveTested: entry.positiveTested,
