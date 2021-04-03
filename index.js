@@ -13,7 +13,7 @@ const lambda = new AWS.Lambda({
 
 const ses = new AWS.SESV2({
   apiVersion: "2019-09-27",
-  region: "eu-central-1"
+  region: "eu-south-1"
 });
 
 async function setData(updateData) {
