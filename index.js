@@ -166,7 +166,7 @@ async function mapData(data) {
       newTotalPositiveTested: ([undefined, null].includes(entry.newPositiveTested) ? 0 : entry.newPositiveTested) + ([undefined, null].includes(entry.newPositiveAntigenTests) ? 0 : entry.newPositiveAntigenTests),
     }));
 
-    const quotient = 533439 / 100000;
+    const quotient = 535354 / 100000;
     mappedData = mappedData.map((entry, index) => ({
       ...entry,
 
