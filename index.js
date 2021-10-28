@@ -123,16 +123,11 @@ async function mapData(data) {
     let mappedData = data.map((entry, index) => ({
       date: entry.date,
 
-      positiveTested: entry.positiveTested,
-      newPositiveTested: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].positiveTested) === false ? entry.positiveTested - data[index - 1].positiveTested : entry.positiveTested,
-
-      newPositiveAntigenTests: entry.newPositiveAntigenTests ? entry.newPositiveAntigenTests : 0,
+      totalPositiveTested: entry.totalPositiveTested,
+      newTotalPositiveTested: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].totalPositiveTested) === false ? entry.totalPositiveTested - data[index - 1].totalPositiveTested : entry.totalPositiveTested,
 
       quarantinedPeople: entry.quarantinedPeople,
       newQuarantinedPeople: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].quarantinedPeople) === false ? entry.quarantinedPeople - data[index - 1].quarantinedPeople : entry.quarantinedPeople,
-
-      // currentlyPositiveTested: entry.currentlyPositiveTested,
-      // newCurrentlyPositiveTested: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].currentlyPositiveTested) === false ? entry.currentlyPositiveTested - data[index - 1].currentlyPositiveTested : entry.currentlyPositiveTested,
 
       cured: entry.cured,
       newCured: [null, undefined].includes(data[index - 1]) === false && [null, undefined].includes(data[index - 1].cured) === false ? entry.cured - data[index - 1].cured : entry.cured,
@@ -163,7 +158,7 @@ async function mapData(data) {
       ...entry,
 
       newTotalNumberTests: ([undefined, null].includes(entry.newNumberTests) ? 0 : entry.newNumberTests) + ([undefined, null].includes(entry.newNumberAntigenTests) ? 0 : entry.newNumberAntigenTests),
-      newTotalPositiveTested: ([undefined, null].includes(entry.newPositiveTested) ? 0 : entry.newPositiveTested) + ([undefined, null].includes(entry.newPositiveAntigenTests) ? 0 : entry.newPositiveAntigenTests),
+      newTotalPositiveTested: ([undefined, null].includes(entry.newTotalPositiveTested) ? 0 : entry.newTotalPositiveTested),
     }));
 
     const quotient = 535354 / 100000;
@@ -171,10 +166,10 @@ async function mapData(data) {
       ...entry,
 
       sevenDaysIncidencePerOneHundredThousandTotalNumberTests: index < 7 ? null : index < 258 ? mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newNumberTests, 0) / quotient : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newTotalNumberTests, 0) / quotient,
-      sevenDaysIncidencePerOneHundredThousandTotalPositiveTested: index < 7 ? null : index < 258 ? mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / quotient : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newTotalPositiveTested, 0) / quotient,
+      sevenDaysIncidencePerOneHundredThousandTotalPositiveTested: index < 7 ? null : index < 258 ? mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newTotalPositiveTested, 0) / quotient : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newTotalPositiveTested, 0) / quotient,
 
-      sevenDaysAveragePositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / 7,
-      sevenDaysIncidencePerOneHundredThousandPositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newPositiveTested, 0) / quotient,
+      sevenDaysAverageTotalPositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newTotalPositiveTested, 0) / 7,
+      sevenDaysIncidencePerOneHundredThousandTotalPositiveTested: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newTotalPositiveTested, 0) / quotient,
 
       sevenDaysAverageNumberTests: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newNumberTests, 0) / 7,
       sevenDaysIncidencePerOneHundredThousandNumberTests: index < 6 ? null : mappedData.slice(index - 6, index + 1).reduce((previousValue, currentValue) => previousValue += currentValue.newNumberTests, 0) / quotient,
@@ -318,15 +313,12 @@ exports.handler = async (event) => {
               sevenDaysIncidencePerOneHundredThousandTotalNumberTests: entry.sevenDaysIncidencePerOneHundredThousandTotalNumberTests,
               sevenDaysIncidencePerOneHundredThousandTotalPositiveTested: entry.sevenDaysIncidencePerOneHundredThousandTotalPositiveTested,
   
-              positiveTested: entry.positiveTested,
-              newPositiveTested: entry.newPositiveTested,
-              sevenDaysAveragePositiveTested: entry.sevenDaysAveragePositiveTested,
-              sevenDaysIncidencePerOneHundredThousandPositiveTested: entry.sevenDaysIncidencePerOneHundredThousandPositiveTested,
-              newPositiveAntigenTests: entry.newPositiveAntigenTests,
+              totalPositiveTested: entry.totalPositiveTested,
+              newTotalPositiveTested: entry.newTotalPositiveTested,
+              sevenDaysAverageTotalPositiveTested: entry.sevenDaysAverageTotalPositiveTested,
+              sevenDaysIncidencePerOneHundredThousandTotalPositiveTested: entry.sevenDaysIncidencePerOneHundredThousandTotalPositiveTested,
               quarantinedPeople: entry.quarantinedPeople,
               newQuarantinedPeople: entry.newQuarantinedPeople,
-              // currentlyPositiveTested: entry.currentlyPositiveTested,
-              // newCurrentlyPositiveTested: entry.newCurrentlyPositiveTested,
               cured: entry.cured,
               newCured: entry.newCured,
               deceased: entry.deceased,
